@@ -29,7 +29,7 @@ public class FileBasedLock implements UploadLock {
 
     private static final Logger log = LoggerFactory.getLogger(FileBasedLock.class);
 
-    private String uploadUri;
+    private final String uploadUri;
     private FileChannel fileChannel = null;
     protected Path lockPath;
 
@@ -87,7 +87,7 @@ public class FileBasedLock implements UploadLock {
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() {
         release();
     }
 

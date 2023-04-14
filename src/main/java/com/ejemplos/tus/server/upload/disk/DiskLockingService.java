@@ -75,12 +75,12 @@ public class DiskLockingService extends AbstractDiskBasedService implements Uplo
 
     @Override
     public boolean isLocked(UploadId id) {
-        boolean locked = false;
+        boolean locked = true;
         Path lockPath = getLockPath(id);
 
         if (lockPath != null) {
             //Try to obtain a lock to see if the upload is currently locked
-            try (UploadLock lock = new FileBasedLock(id.toString(), lockPath)) {
+            try (UploadLock ignored = new FileBasedLock(id.toString(), lockPath)) {
 
                 //We got the lock, so it means no one else is locking it.
                 locked = false;
