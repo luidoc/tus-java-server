@@ -13,7 +13,7 @@ import com.ejemplos.tus.server.HttpMethod;
 import com.ejemplos.tus.server.RequestValidator;
 
 /**
- * The Server MUST respond with the 403 Forbidden status to PATCH requests against a upload URL
+ * The Server MUST respond with the 403 Forbidden status to PATCH requests against an upload URL
  * and MUST NOT modify the or its partial uploads.
  */
 public class PatchFinalUploadValidator implements RequestValidator {

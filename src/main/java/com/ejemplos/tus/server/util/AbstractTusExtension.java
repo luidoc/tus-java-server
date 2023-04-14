@@ -14,8 +14,8 @@ import jakarta.servlet.http.HttpServletRequest;
 
 public abstract class AbstractTusExtension implements TusExtension {
 
-    private List<RequestValidator> requestValidators = new LinkedList<RequestValidator>();
-    private List<RequestHandler> requestHandlers = new LinkedList<RequestHandler>();
+    private final List<RequestValidator> requestValidators = new LinkedList<RequestValidator>();
+    private final List<RequestHandler> requestHandlers = new LinkedList<RequestHandler>();
 
     public AbstractTusExtension() {
         initValidators(requestValidators);

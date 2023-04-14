@@ -15,7 +15,7 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class TusServletResponse extends HttpServletResponseWrapper {
 
-    private Map<String, List<String>> headers = new HashMap<String, List<String>>();
+    private final Map<String, List<String>> headers = new HashMap<>();
 
     /**
      * Constructs a response adaptor wrapping the given response.
@@ -75,17 +75,11 @@ public class TusServletResponse extends HttpServletResponseWrapper {
     }
 
     private void recordHeader(String name, String value) {
-        List<String> values = headers.get(name);
-        if (values == null) {
-            values = new LinkedList<String>();
-            headers.put(name, values);
-        }
-
-        values.add(value);
+        headers.computeIfAbsent(name,v-> new LinkedList<>()).add(value);
     }
 
     private void overwriteHeader(String name, String value) {
-        List<String> values = new LinkedList<String>();
+        List<String> values = new LinkedList<>();
         values.add(value);
         headers.put(name, values);
     }

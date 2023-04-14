@@ -27,13 +27,13 @@ import com.ejemplos.tus.server.TusExtension;
 public class TusServletRequest extends HttpServletRequestWrapper {
 
     private CountingInputStream countingInputStream;
-    private Map<ChecksumAlgorithm, DigestInputStream> digestInputStreamMap = new EnumMap<ChecksumAlgorithm, DigestInputStream>(ChecksumAlgorithm.class);
+    private final Map<ChecksumAlgorithm, DigestInputStream> digestInputStreamMap = new EnumMap<ChecksumAlgorithm, DigestInputStream>(ChecksumAlgorithm.class);
 
     private InputStream contentInputStream = null;
     private boolean isChunkedTransferDecodingEnabled = true;
 
-    private Map<String, List<String>> trailerHeaders = new TreeMap<String, List<String>>(String.CASE_INSENSITIVE_ORDER);
-    private Set<String> processedBySet = new TreeSet<String>();
+    private final Map<String, List<String>> trailerHeaders = new TreeMap<String, List<String>>(String.CASE_INSENSITIVE_ORDER);
+    private final Set<String> processedBySet = new TreeSet<String>();
 
     /**
      * Constructs a request object wrapping the given request.

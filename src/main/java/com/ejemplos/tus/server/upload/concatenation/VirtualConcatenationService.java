@@ -23,7 +23,7 @@ public class VirtualConcatenationService implements UploadConcatenationService {
 
     private static final Logger log = LoggerFactory.getLogger(VirtualConcatenationService.class);
 
-    private UploadStorageService uploadStorageService;
+    private final UploadStorageService uploadStorageService;
 
     public VirtualConcatenationService(UploadStorageService uploadStorageService) {
         this.uploadStorageService = uploadStorageService;

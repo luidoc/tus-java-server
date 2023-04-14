@@ -11,7 +11,7 @@ import org.apache.commons.lang3.Validate;
  * The X-HTTP-Method-Override request header MUST be a string which MUST be interpreted as the request’s
  * method by the Server, if the header is presented. The actual method of the request MUST be ignored.
  * The Client SHOULD use this header if its environment does not support the PATCH or DELETE methods.
- * (https://tus.io/protocols/resumable-upload.html#x-http-method-override)
+ * (<a href="https://tus.io/protocols/resumable-upload.html#x-http-method-override">...</a>)
  */
 public enum HttpMethod {
 

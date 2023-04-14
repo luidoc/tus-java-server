@@ -142,7 +142,7 @@ public class DiskStorageService extends AbstractDiskBasedService implements Uplo
             Path bytesPath = getBytesPath(info.getId());
 
             long max = getMaxUploadSize() > 0 ? getMaxUploadSize() : Long.MAX_VALUE;
-            long transferred = 0;
+            long transferred;
             Long offset = info.getOffset();
             long newOffset = offset;
 
@@ -201,7 +201,7 @@ public class DiskStorageService extends AbstractDiskBasedService implements Uplo
     }
 
     @Override
-    public void terminateUpload(UploadInfo info) throws UploadNotFoundException, IOException {
+    public void terminateUpload(UploadInfo info) throws IOException {
         if (info != null) {
             Path uploadPath = getPathInStorageDirectory(info.getId());
             FileUtils.deleteDirectory(uploadPath.toFile());
@@ -267,23 +267,27 @@ public class DiskStorageService extends AbstractDiskBasedService implements Uplo
 
         List<UploadInfo> uploads = getUploads(info);
 
-        WritableByteChannel outputChannel = Channels.newChannel(outputStream);
+        try (WritableByteChannel outputChannel = Channels.newChannel(outputStream)) {
 
-        for (UploadInfo upload : uploads) {
-            if (upload == null) {
-                log.warn("We cannot copy the bytes of an upload that does not exist");
+            for (UploadInfo upload : uploads) {
+                if (upload == null) {
+                    log.warn("We cannot copy the bytes of an upload that does not exist");
 
-            } else if (upload.isUploadInProgress()) {
-                log.warn("We cannot copy the bytes of upload {} because it is still in progress", upload.getId());
+                } else if (upload.isUploadInProgress()) {
+                    log.warn("We cannot copy the bytes of upload {} because it is still in progress", upload.getId());
 
-            } else {
-                Path bytesPath = getBytesPath(upload.getId());
-                try (FileChannel file = FileChannel.open(bytesPath, READ)) {
-                    //Efficiently copy the bytes to the output stream
-                    file.transferTo(0, upload.getLength(), outputChannel);
+                } else {
+                    Path bytesPath = getBytesPath(upload.getId());
+                    try (FileChannel file = FileChannel.open(bytesPath, READ)) {
+                        //Efficiently copy the bytes to the output stream
+                        file.transferTo(0, upload.getLength(), outputChannel);
+                    }
                 }
             }
+        } catch (Exception exc) {
+            log.warn(exc.getMessage());
         }
+
     }
 
     @Override

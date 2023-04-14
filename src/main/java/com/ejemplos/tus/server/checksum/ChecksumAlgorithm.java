@@ -23,8 +23,8 @@ public enum ChecksumAlgorithm {
 
     private static final Logger log = LoggerFactory.getLogger(ChecksumAlgorithm.class);
 
-    private String javaName;
-    private String tusName;
+    private final String javaName;
+    private final String tusName;
 
     ChecksumAlgorithm(String javaName, String tusName) {
         this.javaName = javaName;

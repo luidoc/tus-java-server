@@ -44,7 +44,7 @@ public class HttpHeader {
 
     /**
      * The Upload-Expires response header indicates the time after which the unfinished upload expires.
-     * The value of the Upload-Expires header MUST be in RFC 7231 (https://tools.ietf.org/html/rfc7231#section-7.1.1.1)
+     * The value of the Upload-Expires header MUST be in RFC 7231 (<a href="https://tools.ietf.org/html/rfc7231#section-7.1.1.1">...</a>)
      * datetime format.
      */
     public static final String UPLOAD_EXPIRES = "Upload-Expires";

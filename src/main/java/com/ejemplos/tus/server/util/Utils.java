@@ -16,6 +16,7 @@ import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import jakarta.servlet.http.HttpServletRequest;
@@ -65,12 +66,10 @@ public class Utils {
     }
 
     public static List<String> parseConcatenationIDsFromHeader(String uploadConcatValue) {
-        List<String> output = new LinkedList<String>();
+        List<String> output = new LinkedList<>();
 
         String idString = StringUtils.substringAfter(uploadConcatValue, ";");
-        for (String id : StringUtils.trimToEmpty(idString).split("\\s")) {
-            output.add(id);
-        }
+        Collections.addAll(output, StringUtils.trimToEmpty(idString).split("\\s"));
 
         return output;
     }
@@ -86,7 +85,6 @@ public class Utils {
                         info = clazz.cast(ois.readObject());
                     } catch (ClassNotFoundException e) {
                         //This should not happen
-                        info = null;
                     }
                 } else {
                     throw new IOException("Unable to lock file " + path);
@@ -139,7 +137,7 @@ public class Utils {
 
     private static FileLock lockFile(FileChannel channel, boolean shared) throws IOException {
         int i = 0;
-        FileLock lock = null;
+        FileLock lock;
         do {
             if (i > 0) {
                 sleep(LOCK_FILE_SLEEP_TIME);

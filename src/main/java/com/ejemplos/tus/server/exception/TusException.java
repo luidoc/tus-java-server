@@ -1,5 +1,7 @@
 package com.ejemplos.tus.server.exception;
 
+import java.io.Serial;
+
 /**
  * Super class for exception in the tus protocol
  */
@@ -8,8 +10,9 @@ public class TusException extends Exception {
     /**
 	 *
 	 */
-	private static final long serialVersionUID = 1L;
-	private int status;
+	@Serial
+    private static final long serialVersionUID = 1L;
+	private final int status;
 
     public TusException(int status, String message) {
         this(status, message, null);

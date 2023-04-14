@@ -5,7 +5,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import com.ejemplos.tus.server.TusFileUploadService;
 import com.ejemplos.tus.server.upload.UploadId;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
@@ -16,9 +15,9 @@ import org.slf4j.LoggerFactory;
  */
 public class AbstractDiskBasedService {
 
-    private static final Logger log = LoggerFactory.getLogger(TusFileUploadService.class);
+    private static final Logger log = LoggerFactory.getLogger(AbstractDiskBasedService.class);
 
-    private Path storagePath;
+    private final Path storagePath;
 
     public AbstractDiskBasedService(String path) {
         Validate.notBlank(path, "The storage path cannot be blank");

@@ -14,22 +14,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Enumeration class that enumerates all input streams associated with with given list of uploads
+ * Enumeration class that enumerates all input streams associated with given list of uploads
  */
 public class UploadInputStreamEnumeration implements Enumeration<InputStream> {
 
     private static final Logger log = LoggerFactory.getLogger(UploadInputStreamEnumeration.class);
 
-    private List<UploadInfo> uploads;
-    private UploadStorageService uploadStorageService;
+    private final UploadStorageService uploadStorageService;
     private Iterator<UploadInfo> uploadIterator;
     private InputStream currentInputStream = null;
 
     public UploadInputStreamEnumeration(List<UploadInfo> uploadList,
                                         UploadStorageService uploadStorageService) {
-        this.uploads = new ArrayList<>(uploadList);
+        List<UploadInfo> uploads = new ArrayList<>(uploadList);
         this.uploadStorageService = uploadStorageService;
-        this.uploadIterator = this.uploads.iterator();
+        this.uploadIterator = uploads.iterator();
     }
 
     @Override
@@ -63,7 +62,6 @@ public class UploadInputStreamEnumeration implements Enumeration<InputStream> {
                 is = uploadStorageService.getUploadedBytes(info.getId());
             } catch (IOException | UploadNotFoundException ex) {
                 log.error("Error while retrieving input stream for upload with ID " + info.getId(), ex);
-                is = null;
             }
         }
         return is;

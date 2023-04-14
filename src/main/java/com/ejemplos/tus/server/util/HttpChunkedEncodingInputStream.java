@@ -25,7 +25,7 @@ public class HttpChunkedEncodingInputStream extends InputStream {
     private static final Logger log = LoggerFactory.getLogger(HttpChunkedEncodingInputStream.class);
 
     /** The input stream that we're wrapping */
-    private InputStream in;
+    private final InputStream in;
 
     /** The current chunk size */
     private int chunkSize = 0;
@@ -214,7 +214,7 @@ public class HttpChunkedEncodingInputStream extends InputStream {
         }
 
         //parse data
-        return new String(baos.toByteArray(), Charset.forName("US-ASCII"));
+        return baos.toString(StandardCharsets.US_ASCII);
     }
 
     /**

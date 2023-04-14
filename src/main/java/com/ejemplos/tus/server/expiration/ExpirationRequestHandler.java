@@ -18,7 +18,7 @@ import com.ejemplos.tus.server.HttpMethod;
  * be included in every PATCH response if the upload is going to expire. Its value MAY change over time.
  * If the expiration is known at the creation, the Upload-Expires header MUST be included in the response to
  * the initial POST request. Its value MAY change over time. The value of the Upload-Expires header MUST be in
- * RFC 7231 (https://tools.ietf.org/html/rfc7231#section-7.1.1.1) datetime format.
+ * RFC 7231 (<a href="https://tools.ietf.org/html/rfc7231#section-7.1.1.1">...</a>) datetime format.
  */
 public class ExpirationRequestHandler extends AbstractRequestHandler {
 

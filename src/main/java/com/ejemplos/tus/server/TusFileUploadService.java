@@ -48,7 +48,7 @@ public class TusFileUploadService {
     private UploadStorageService uploadStorageService;
     private UploadLockingService uploadLockingService;
     private UploadIdFactory idFactory = new UUIDUploadIdFactory();
-    private final LinkedHashMap<String, TusExtension> enabledFeatures = new LinkedHashMap<String, TusExtension>();
+    private final LinkedHashMap<String, TusExtension> enabledFeatures = new LinkedHashMap< >();
     private final Set<HttpMethod> supportedHttpMethods = EnumSet.noneOf(HttpMethod.class);
     private boolean isThreadLocalCacheEnabled = false;
     private boolean isChunkedTransferDecodingEnabled = false;
@@ -98,8 +98,8 @@ public class TusFileUploadService {
 
     /**
      * Provide a custom {@link UploadIdFactory} implementation that should be used to generate identifiers for
-     * the different uploads. Example implementation are {@link es.xunta.transversais.upload.UUIDUploadIdFactory} and
-     * {@link es.xunta.transversais.upload.TimeBasedUploadIdFactory}.
+     * the different uploads. Example implementation are {@link com.ejemplos.tus.server.upload.UUIDUploadIdFactory} and
+     * {@link com.ejemplos.tus.server.upload.TimeBasedUploadIdFactory}.
      *
      * @param uploadIdFactory The custom {@link UploadIdFactory} implementation
      * @return The current service
@@ -213,7 +213,7 @@ public class TusFileUploadService {
     }
 
     /**
-     * Add a custom (application-specific) extension that implements the {@link es.xunta.transversais.TusExtension}
+     * Add a custom (application-specific) extension that implements the {@link com.ejemplos.tus.server.TusExtension}
      * interface. For example you can add your own extension that checks authentication and authorization policies
      * within your application for the user doing the upload.
      *
@@ -259,7 +259,7 @@ public class TusFileUploadService {
      * @return The set of active extensions
      */
     public Set<String> getEnabledFeatures() {
-        return new LinkedHashSet<String>(enabledFeatures.keySet());
+        return new LinkedHashSet< >(enabledFeatures.keySet());
     }
 
     /**
@@ -298,7 +298,7 @@ public class TusFileUploadService {
         TusServletRequest request = new TusServletRequest(servletRequest, isChunkedTransferDecodingEnabled);
         TusServletResponse response = new TusServletResponse(servletResponse);
 
-        try (UploadLock lock = uploadLockingService.lockUploadByUri(request.getRequestURI())) {
+        try (UploadLock ignored = uploadLockingService.lockUploadByUri(request.getRequestURI())) {
 
             processLockedRequest(method, request, response, ownerKey);
 
@@ -331,7 +331,7 @@ public class TusFileUploadService {
     public InputStream getUploadedBytes(String uploadURI, String ownerKey)
             throws IOException, TusException {
 
-        try (UploadLock lock = uploadLockingService.lockUploadByUri(uploadURI)) {
+        try (UploadLock ignored = uploadLockingService.lockUploadByUri(uploadURI)) {
 
             return uploadStorageService.getUploadedBytes(uploadURI, ownerKey);
         }
@@ -359,7 +359,7 @@ public class TusFileUploadService {
      * @throws TusException When the upload is still in progress or cannot be found
      */
     public UploadInfo getUploadInfo(String uploadURI, String ownerKey) throws IOException, TusException {
-        try (UploadLock lock = uploadLockingService.lockUploadByUri(uploadURI)) {
+        try (UploadLock ignored = uploadLockingService.lockUploadByUri(uploadURI)) {
 
             return uploadStorageService.getUploadInfo(uploadURI, ownerKey);
         }
@@ -383,7 +383,7 @@ public class TusFileUploadService {
      * @param ownerKey  The key of the owner of this upload
      */
     public void deleteUpload(String uploadURI, String ownerKey) throws IOException, TusException {
-        try (UploadLock lock = uploadLockingService.lockUploadByUri(uploadURI)) {
+        try (UploadLock ignored = uploadLockingService.lockUploadByUri(uploadURI)) {
             UploadInfo uploadInfo = uploadStorageService.getUploadInfo(uploadURI, ownerKey);
             if (uploadInfo != null) {
                 uploadStorageService.terminateUpload(uploadInfo);
