@@ -3,7 +3,6 @@ package com.ejemplos.tus.server.upload.disk;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Path;
-import java.util.Objects;
 
 import com.ejemplos.tus.server.upload.UploadId;
 import com.ejemplos.tus.server.upload.UploadInfo;
@@ -18,8 +17,8 @@ public class ExpiredUploadFilter implements DirectoryStream.Filter<Path> {
 
     private static final Logger log = LoggerFactory.getLogger(ExpiredUploadFilter.class);
 
-    private DiskStorageService diskStorageService;
-    private UploadLockingService uploadLockingService;
+    private final DiskStorageService diskStorageService;
+    private final UploadLockingService uploadLockingService;
 
     ExpiredUploadFilter(DiskStorageService diskStorageService, UploadLockingService uploadLockingService) {
         this.diskStorageService = diskStorageService;
@@ -39,8 +38,9 @@ public class ExpiredUploadFilter implements DirectoryStream.Filter<Path> {
 
         } catch (Exception ex) {
             if (log.isDebugEnabled()) {
-                log.debug("Not able to determine state of upload " + Objects.toString(id), ex);
+                log.debug("Not able to determine state of upload " + id, ex);
             }
+            throw new IOException(ex);
         }
 
         return false;
