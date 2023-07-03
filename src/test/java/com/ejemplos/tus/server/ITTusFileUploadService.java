@@ -1,14 +1,19 @@
 package com.ejemplos.tus.server;
 
-import static com.ejemplos.tus.server.util.MapMatcher.hasSize;
-import static org.hamcrest.CoreMatchers.allOf;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.collection.IsMapContaining.hasEntry;
-import static org.junit.jupiter.api.Assertions.*;
+import com.ejemplos.tus.server.exception.TusException;
+import com.ejemplos.tus.server.upload.UploadInfo;
+import com.ejemplos.tus.server.util.Utils;
+import jakarta.servlet.http.HttpServletResponse;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.hamcrest.Matchers;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,25 +21,17 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.UUID;
 
-import com.ejemplos.tus.server.exception.InvalidContentTypeException;
-import com.ejemplos.tus.server.exception.TusException;
-import com.ejemplos.tus.server.upload.UploadInfo;
-import com.ejemplos.tus.server.util.Utils;
-import jakarta.servlet.http.HttpServletResponse;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.hamcrest.Matchers;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.test.context.event.annotation.AfterTestClass;
-import org.springframework.test.context.event.annotation.BeforeTestClass;
+import static com.ejemplos.tus.server.util.MapMatcher.hasSize;
+import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.collection.IsMapContaining.hasEntry;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ITTusFileUploadService {
 
@@ -48,13 +45,13 @@ public class ITTusFileUploadService {
 
     protected static Path storagePath;
 
-    @BeforeTestClass
+    @BeforeAll
     public static void setupDataFolder() throws IOException {
         storagePath = Paths.get("target", "tus", "data").toAbsolutePath();
         Files.createDirectories(storagePath);
     }
 
-    @AfterTestClass
+    @AfterAll
     public static void destroyDataFolder() throws IOException {
         FileUtils.deleteDirectory(storagePath.toFile());
     }
@@ -673,7 +670,11 @@ public class ITTusFileUploadService {
         assertResponseHeaderNotBlank(HttpHeader.UPLOAD_EXPIRES);
         assertResponseHeader(HttpHeader.UPLOAD_OFFSET, "41");
 
-        Long expirationTimestampBefore = Long.parseLong(servletResponse.getHeader(HttpHeader.UPLOAD_EXPIRES));
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z");
+        SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("ddMMyyyyHHmm");
+
+
+        Long expirationTimestampBefore = Long.parseLong(simpleDateFormat1.format(simpleDateFormat.parse(servletResponse.getHeader(HttpHeader.UPLOAD_EXPIRES))));
 
         //Make sure cleanup does not interfere with this test
         tusFileUploadService.cleanup();
