@@ -21,6 +21,7 @@ import com.ejemplos.tus.server.exception.UnsupportedMethodException;
 import com.ejemplos.tus.server.exception.UploadNotFoundException;
 import com.ejemplos.tus.server.exception.UploadOffsetMismatchException;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -28,6 +29,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 
 import com.ejemplos.tus.server.HttpHeader;
 import com.ejemplos.tus.server.HttpMethod;
+import org.springframework.test.context.event.annotation.BeforeTestClass;
 
 public class ITCoreProtocol extends AbstractTusExtensionIntegrationTest {
 

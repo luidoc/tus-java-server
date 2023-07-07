@@ -22,7 +22,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.Locale;
+import java.util.TimeZone;
 import java.util.UUID;
 
 import static com.ejemplos.tus.server.util.MapMatcher.hasSize;
@@ -471,7 +475,9 @@ public class ITTusFileUploadService {
         assertResponseHeaderNotBlank(HttpHeader.UPLOAD_EXPIRES);
         assertResponseStatus(HttpServletResponse.SC_CREATED);
 
-        Long expirationTimestampBefore = Long.parseLong(servletResponse.getHeader(HttpHeader.UPLOAD_EXPIRES));
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH);
+        SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("ddMMyyyyHHmm");
+        Long expirationTimestampBefore = Long.parseLong(simpleDateFormat1.format(simpleDateFormat.parse(servletResponse.getHeader(HttpHeader.UPLOAD_EXPIRES))));
 
         String location = UPLOAD_URI +
                 StringUtils.substringAfter(servletResponse.getHeader(HttpHeader.LOCATION), UPLOAD_URI);
@@ -670,11 +676,10 @@ public class ITTusFileUploadService {
         assertResponseHeaderNotBlank(HttpHeader.UPLOAD_EXPIRES);
         assertResponseHeader(HttpHeader.UPLOAD_OFFSET, "41");
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH);
         SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("ddMMyyyyHHmm");
-
-
         Long expirationTimestampBefore = Long.parseLong(simpleDateFormat1.format(simpleDateFormat.parse(servletResponse.getHeader(HttpHeader.UPLOAD_EXPIRES))));
+
 
         //Make sure cleanup does not interfere with this test
         tusFileUploadService.cleanup();

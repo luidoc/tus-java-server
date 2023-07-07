@@ -23,6 +23,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import com.ejemplos.tus.server.AbstractTusExtensionIntegrationTest;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -33,6 +34,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 
 import com.ejemplos.tus.server.HttpHeader;
 import com.ejemplos.tus.server.HttpMethod;
+import org.springframework.test.context.event.annotation.BeforeTestClass;
 
 public class ITCreationExtension extends AbstractTusExtensionIntegrationTest {
 
