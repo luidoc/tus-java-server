@@ -17,6 +17,7 @@ import java.nio.file.Paths;
 import java.text.ParseException;
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -109,16 +110,20 @@ public class ExpiredUploadFilterTest {
 
     @Test
     public void acceptException() throws Exception {
-        UploadInfo info = createExpiredUploadInfo();
-        info.setId(new UploadId(UUID.randomUUID()));
-        info.setOffset(8L);
-        info.setLength(10L);
-        info.updateExpiration(100L);
+        Throwable exception =
+                assertThrows(IOException.class, () -> {
 
-        when(diskStorageService.getUploadInfo(eq(info.getId()))).thenThrow(new IOException());
-        when(uploadLockingService.isLocked(eq(info.getId()))).thenReturn(false);
+                    UploadInfo info = createExpiredUploadInfo();
+                    info.setId(new UploadId(UUID.randomUUID()));
+                    info.setOffset(8L);
+                    info.setLength(10L);
+                    info.updateExpiration(100L);
 
-        assertFalse(uploadFilter.accept(Paths.get(info.getId().toString())));
+                    when(diskStorageService.getUploadInfo(info.getId())).thenThrow(new IOException());
+                    when(uploadLockingService.isLocked(info.getId())).thenReturn(false);
+
+                    assertFalse(uploadFilter.accept(Paths.get(info.getId().toString())));
+                });
     }
 
     private UploadInfo createExpiredUploadInfo() throws ParseException {

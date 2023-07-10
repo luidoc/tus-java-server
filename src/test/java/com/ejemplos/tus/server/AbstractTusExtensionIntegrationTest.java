@@ -5,6 +5,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.nullable;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
@@ -48,8 +49,8 @@ public abstract class AbstractTusExtensionIntegrationTest {
         uploadInfo = new UploadInfo();
         uploadInfo.setOffset(offset);
         uploadInfo.setLength(length);
-        when(uploadStorageService.getUploadInfo(nullable(String.class), nullable(String.class))).thenReturn(uploadInfo);
-        when(uploadStorageService.append(any(UploadInfo.class), any(InputStream.class))).thenReturn(uploadInfo);
+        lenient().when(uploadStorageService.getUploadInfo(nullable(String.class), nullable(String.class))).thenReturn(uploadInfo);
+        lenient().when(uploadStorageService.append(any(UploadInfo.class), any(InputStream.class))).thenReturn(uploadInfo);
     }
 
     protected void setRequestHeaders(String... headers) {

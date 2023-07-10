@@ -6,10 +6,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.notNull;
 import static org.mockito.ArgumentMatchers.nullable;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import java.util.UUID;
 
@@ -56,8 +53,9 @@ public class ITCreationExtension extends AbstractTusExtensionIntegrationTest {
         id = new UploadId(UUID.randomUUID());
         servletRequest.setRequestURI(UPLOAD_URI);
         reset(uploadStorageService);
-        when(uploadStorageService.getUploadURI()).thenReturn(UPLOAD_URI);
-        when(uploadStorageService.create(ArgumentMatchers.any(UploadInfo.class), nullable(String.class))).then(
+
+        lenient().when(uploadStorageService.getUploadURI()).thenReturn(UPLOAD_URI);
+        lenient().when(uploadStorageService.create(ArgumentMatchers.any(UploadInfo.class), nullable(String.class))).then(
                 new Answer<UploadInfo>() {
                     @Override
                     public UploadInfo answer(InvocationOnMock invocation) throws Throwable {
@@ -270,7 +268,7 @@ public class ITCreationExtension extends AbstractTusExtensionIntegrationTest {
                 assertThrows(PostOnInvalidRequestURIException.class, () -> {
                     reset(uploadStorageService);
                     when(uploadStorageService.getUploadURI()).thenReturn("/submission/([a-z0-9]+)/files/upload");
-                    when(uploadStorageService.create(ArgumentMatchers.any(UploadInfo.class), nullable(String.class))).then(
+                    lenient().when(uploadStorageService.create(ArgumentMatchers.any(UploadInfo.class), nullable(String.class))).then(
                             new Answer<UploadInfo>() {
                                 @Override
                                 public UploadInfo answer(InvocationOnMock invocation) throws Throwable {
