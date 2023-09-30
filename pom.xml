@@ -250,13 +250,13 @@
         <profile>
             <id>run-sonar</id>
             <activation>
-                <jdk>[19, ]</jdk>
+                <activeByDefault>true</activeByDefault>
                 <property>
-                    <name>env.SONAR_TOKEN</name>
+                    <name>cls</name>
                 </property>
             </activation>
             <properties>
-                <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+                <sonar.host.url>http://localhost:9000</sonar.host.url>
             </properties>
             <build>
                 <plugins>
