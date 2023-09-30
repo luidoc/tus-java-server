@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
  * Upload locking implementation using the file system file locking mechanism.
  * File locking can also apply to shared network drives. This way the framework supports clustering as long as
  * the upload storage directory is mounted as a shared (network) drive.
- * <p/>
+ * <p>
  * File locks are also automatically released on application (JVM) shutdown. This means the file locking is not
  * persistent and prevents cleanup and stale lock issues.
  */
@@ -33,6 +33,11 @@ public class FileBasedLock implements UploadLock {
     private FileChannel fileChannel = null;
     protected Path lockPath;
 
+    /**
+     * Constructor
+     * @param uploadUri Upload Uri
+     * @param lockPath Lock path
+     */
     public FileBasedLock(String uploadUri, Path lockPath) throws UploadAlreadyLockedException, IOException {
         Validate.notBlank(uploadUri, "The upload URI cannot be blank");
         Validate.notNull(lockPath, "The path to the lock cannot be null");

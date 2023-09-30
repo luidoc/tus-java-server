@@ -12,10 +12,10 @@ import com.ejemplos.tus.server.HttpHeader;
 import com.ejemplos.tus.server.HttpMethod;
 
 /** A HEAD request can be used to retrieve the metadata that was supplied at creation.
- * <p/>
+ * <p>
  *  If an upload contains additional metadata, responses to HEAD requests MUST include the Upload-Metadata
  *  header and its value as specified by the Client during the creation.
- * <p/>
+ * <p>
  *  As long as the length of the upload is not known, the Server MUST set Upload-Defer-Length: 1 in
  *  all responses to HEAD requests.
  */

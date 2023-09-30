@@ -17,10 +17,10 @@ import org.apache.commons.lang3.Validate;
 
 /**
  * {@link UploadLockingService} implementation that uses the file system for implementing locking
- * <p/>
+ * <p>
  * File locking can also apply to shared network drives. This way the framework supports clustering as long as
  * the upload storage directory is mounted as a shared (network) drive.
- * <p/>
+ * <p>
  * File locks are also automatically released on application (JVM) shutdown. This means the file locking is not
  * persistent and prevents cleanup and stale lock issues.
  */

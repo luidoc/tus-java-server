@@ -14,11 +14,11 @@ import com.ejemplos.tus.server.HttpMethod;
 import jakarta.servlet.http.HttpServletResponse;
 
 /** A HEAD request is used to determine the offset at which the upload should be continued.
- * <p/>
+ * <p>
  * The Server MUST always include the Upload-Offset header in the response for a HEAD request,
  * even if the offset is 0, or the upload is already considered completed. If the size of the upload is known,
  * the Server MUST include the Upload-Length header in the response.
- * <p/>
+ * <p>
  * The Server MUST prevent the client and/or proxies from caching the response by adding
  * the Cache-Control: no-store header to the response.
  */

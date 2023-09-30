@@ -14,13 +14,13 @@ import com.ejemplos.tus.server.RequestValidator;
 import com.ejemplos.tus.server.TusFileUploadService;
 
 /** Class that will validate if the tus version in the request corresponds to our implementation version
- * <p/>
+ * <p>
  * The Tus-Resumable header MUST be included in every request and response except for OPTIONS requests.
  * The value MUST be the version of the protocol used by the Client or the Server.
  * If the version specified by the Client is not supported by the Server, it MUST respond with the
  * 412 Precondition Failed status and MUST include the Tus-Version header into the response.
  * In addition, the Server MUST NOT process the request.
- * <p/>
+ * <p>
  * (<a href="https://tus.io/protocols/resumable-upload.html#tus-resumable">...</a>)
  */
 public class TusResumableValidator implements RequestValidator {
