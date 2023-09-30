@@ -77,7 +77,7 @@ public class UploadInfo implements Serializable {
     /**
      * Get the encoded Tus metadata string as it was provided by the Tus client at creation of the upload.
      * The encoded metadata string consists of one or more comma-separated key-value pairs where the key is
-     * ASCII encoded and the value Base64 encoded. See https://tus.io/protocols/resumable-upload.html#upload-metadata
+     * ASCII encoded and the value Base64 encoded. See <a href="https://tus.io/protocols/resumable-upload.html#upload-metadata">...</a>
      * @return The encoded metadata string as received from the client
      */
     public String getEncodedMetadata() {
@@ -87,8 +87,7 @@ public class UploadInfo implements Serializable {
     /**
      * Set the encoded Tus metadata string as it was provided by the Tus client at creation of the upload.
      * The encoded metadata string consists of one or more comma-separated key-value pairs where the key is
-     * ASCII encoded and the value Base64 encoded. See https://tus.io/protocols/resumable-upload.html#upload-metadata
-     * @return The encoded metadata string as received from the client
+     * ASCII encoded and the value Base64 encoded. See <a href="https://tus.io/protocols/resumable-upload.html#upload-metadata">...</a>
      */
     public void setEncodedMetadata(String encodedMetadata) {
         this.encodedMetadata = encodedMetadata;
@@ -98,7 +97,7 @@ public class UploadInfo implements Serializable {
      * Get the decoded metadata map provided by the client based on the encoded Tus metadata string received on
      * creation of the upload. The encoded metadata string consists of one or more comma-separated key-value pairs
      * where the key is ASCII encoded and the value Base64 encoded. The key and value MUST be separated by a space.
-     * See https://tus.io/protocols/resumable-upload.html#upload-metadata
+     * See <a href="https://tus.io/protocols/resumable-upload.html#upload-metadata">...</a>
      * @return The encoded metadata string as received from the client
      */
     public Map<String, String> getMetadata() {
@@ -297,7 +296,7 @@ public class UploadInfo implements Serializable {
     /**
      * Try to guess the filename of the uploaded data. If we cannot guess the name
      * we fall back to the ID.
-     * <p/>
+     * <p>
      * NOTE: This is only a guess, there are no guarantees that the return value is correct
      *
      * @return A potential file name
@@ -315,7 +314,7 @@ public class UploadInfo implements Serializable {
 
     /**
      * Try to guess the mime-type of the uploaded data.
-     * <p/>
+     * <p>
      * NOTE: This is only a guess, there are no guarantees that the return value is correct
      *
      * @return A potential file name
