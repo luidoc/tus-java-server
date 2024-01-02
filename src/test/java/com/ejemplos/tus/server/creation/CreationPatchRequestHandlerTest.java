@@ -1,17 +1,7 @@
 package com.ejemplos.tus.server.creation;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.ArgumentMatchers.nullable;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.UUID;
-
+import com.ejemplos.tus.server.HttpHeader;
+import com.ejemplos.tus.server.HttpMethod;
 import com.ejemplos.tus.server.exception.UploadNotFoundException;
 import com.ejemplos.tus.server.upload.UploadId;
 import com.ejemplos.tus.server.upload.UploadInfo;
@@ -19,19 +9,21 @@ import com.ejemplos.tus.server.upload.UploadStorageService;
 import com.ejemplos.tus.server.util.TusServletRequest;
 import com.ejemplos.tus.server.util.TusServletResponse;
 import jakarta.servlet.http.HttpServletResponse;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-import com.ejemplos.tus.server.HttpHeader;
-import com.ejemplos.tus.server.HttpMethod;
+import java.util.UUID;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.ArgumentMatchers.nullable;
+import static org.hamcrest.Matchers.is;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class CreationPatchRequestHandlerTest {
