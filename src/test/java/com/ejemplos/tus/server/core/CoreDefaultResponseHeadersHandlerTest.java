@@ -14,7 +14,7 @@ import com.ejemplos.tus.server.HttpHeader;
 import com.ejemplos.tus.server.HttpMethod;
 import com.ejemplos.tus.server.TusFileUploadService;
 
-public class CoreDefaultResponseHeadersHandlerTest {
+class CoreDefaultResponseHeadersHandlerTest {
 
     private MockHttpServletRequest servletRequest;
 
@@ -30,7 +30,7 @@ public class CoreDefaultResponseHeadersHandlerTest {
     }
 
     @Test
-    public void supports() throws Exception {
+    void supports() throws Exception {
         assertThat(handler.supports(HttpMethod.GET), is(true));
         assertThat(handler.supports(HttpMethod.POST), is(true));
         assertThat(handler.supports(HttpMethod.PUT), is(true));
@@ -42,7 +42,7 @@ public class CoreDefaultResponseHeadersHandlerTest {
     }
 
     @Test
-    public void process() throws Exception {
+    void process() throws Exception {
         handler.process(HttpMethod.PATCH, new TusServletRequest(servletRequest),
                 new TusServletResponse(servletResponse), null, null);
 

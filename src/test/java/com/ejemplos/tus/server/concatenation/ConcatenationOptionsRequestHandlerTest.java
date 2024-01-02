@@ -16,7 +16,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import com.ejemplos.tus.server.HttpHeader;
 import com.ejemplos.tus.server.HttpMethod;
 
-public class ConcatenationOptionsRequestHandlerTest {
+class ConcatenationOptionsRequestHandlerTest {
 
     private ConcatenationOptionsRequestHandler handler;
 
@@ -32,7 +32,7 @@ public class ConcatenationOptionsRequestHandlerTest {
     }
 
     @Test
-    public void processListExtensions() throws Exception {
+    void processListExtensions() throws Exception {
 
         handler.process(HttpMethod.OPTIONS, new TusServletRequest(servletRequest),
                 new TusServletResponse(servletResponse), null, null);
@@ -42,7 +42,7 @@ public class ConcatenationOptionsRequestHandlerTest {
     }
 
     @Test
-    public void supports() throws Exception {
+    void supports() throws Exception {
         assertThat(handler.supports(HttpMethod.GET), is(false));
         assertThat(handler.supports(HttpMethod.POST), is(false));
         assertThat(handler.supports(HttpMethod.PUT), is(false));

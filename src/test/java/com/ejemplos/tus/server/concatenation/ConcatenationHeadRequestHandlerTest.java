@@ -34,7 +34,7 @@ import com.ejemplos.tus.server.HttpMethod;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class ConcatenationHeadRequestHandlerTest {
+class ConcatenationHeadRequestHandlerTest {
 
     private ConcatenationHeadRequestHandler handler;
 
@@ -57,7 +57,7 @@ public class ConcatenationHeadRequestHandlerTest {
     }
 
     @Test
-    public void supports() throws Exception {
+    void supports() throws Exception {
         assertThat(handler.supports(HttpMethod.GET), is(false));
         assertThat(handler.supports(HttpMethod.POST), is(false));
         assertThat(handler.supports(HttpMethod.PUT), is(false));
@@ -69,7 +69,7 @@ public class ConcatenationHeadRequestHandlerTest {
     }
 
     @Test
-    public void testRegularUpload() throws Exception {
+    void testRegularUpload() throws Exception {
         UploadInfo info1 = new UploadInfo();
         info1.setId(new UploadId(UUID.randomUUID()));
         info1.setUploadConcatHeaderValue("Impossible");
@@ -86,7 +86,7 @@ public class ConcatenationHeadRequestHandlerTest {
     }
 
     @Test
-    public void testPartialUpload() throws Exception {
+    void testPartialUpload() throws Exception {
         UploadInfo info1 = new UploadInfo();
         info1.setId(new UploadId(UUID.randomUUID()));
         info1.setUploadConcatHeaderValue("partial");
@@ -103,7 +103,7 @@ public class ConcatenationHeadRequestHandlerTest {
     }
 
     @Test
-    public void testConcatenatedUploadWithLength() throws Exception {
+    void testConcatenatedUploadWithLength() throws Exception {
         UploadInfo info1 = new UploadInfo();
         info1.setId(new UploadId(UUID.randomUUID()));
         info1.setUploadConcatHeaderValue("final; 123 456");
@@ -126,7 +126,7 @@ public class ConcatenationHeadRequestHandlerTest {
     }
 
     @Test
-    public void testConcatenatedUploadWithoutLength() throws Exception {
+    void testConcatenatedUploadWithoutLength() throws Exception {
         UploadInfo info1 = new UploadInfo();
         info1.setId(new UploadId(UUID.randomUUID()));
         info1.setUploadConcatHeaderValue("final; 123 456");

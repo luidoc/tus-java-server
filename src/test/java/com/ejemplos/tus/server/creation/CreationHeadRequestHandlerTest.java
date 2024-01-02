@@ -23,7 +23,7 @@ import com.ejemplos.tus.server.HttpHeader;
 import com.ejemplos.tus.server.HttpMethod;
 
 @ExtendWith(MockitoExtension.class)
-public class CreationHeadRequestHandlerTest {
+class CreationHeadRequestHandlerTest {
 
     private CreationHeadRequestHandler handler;
 
@@ -42,7 +42,7 @@ public class CreationHeadRequestHandlerTest {
     }
 
     @Test
-    public void supports() throws Exception {
+    void supports() throws Exception {
         assertThat(handler.supports(HttpMethod.GET), is(false));
         assertThat(handler.supports(HttpMethod.POST), is(false));
         assertThat(handler.supports(HttpMethod.PUT), is(false));
@@ -54,7 +54,7 @@ public class CreationHeadRequestHandlerTest {
     }
 
     @Test
-    public void processWithLengthAndMetadata() throws Exception {
+    void processWithLengthAndMetadata() throws Exception {
         UploadInfo info = new UploadInfo();
         info.setOffset(2L);
         info.setLength(10L);
@@ -69,7 +69,7 @@ public class CreationHeadRequestHandlerTest {
     }
 
     @Test
-    public void processWithLengthAndNoMetadata() throws Exception {
+    void processWithLengthAndNoMetadata() throws Exception {
         UploadInfo info = new UploadInfo();
         info.setOffset(2L);
         info.setLength(10L);
@@ -84,7 +84,7 @@ public class CreationHeadRequestHandlerTest {
     }
 
     @Test
-    public void processWithNoLengthAndMetadata() throws Exception {
+    void processWithNoLengthAndMetadata() throws Exception {
         UploadInfo info = new UploadInfo();
         info.setOffset(2L);
         info.setLength(null);
@@ -99,7 +99,7 @@ public class CreationHeadRequestHandlerTest {
     }
 
     @Test
-    public void processWithNoLengthAndNoMetadata() throws Exception {
+    void processWithNoLengthAndNoMetadata() throws Exception {
         UploadInfo info = new UploadInfo();
         info.setOffset(2L);
         info.setLength(null);

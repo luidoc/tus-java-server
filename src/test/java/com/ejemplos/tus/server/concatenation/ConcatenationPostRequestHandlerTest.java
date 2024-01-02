@@ -37,7 +37,7 @@ import com.ejemplos.tus.server.HttpMethod;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class ConcatenationPostRequestHandlerTest {
+class ConcatenationPostRequestHandlerTest {
 
     private ConcatenationPostRequestHandler handler;
 
@@ -60,7 +60,7 @@ public class ConcatenationPostRequestHandlerTest {
     }
 
     @Test
-    public void supports() throws Exception {
+    void supports() throws Exception {
         assertThat(handler.supports(HttpMethod.GET), is(false));
         assertThat(handler.supports(HttpMethod.POST), is(true));
         assertThat(handler.supports(HttpMethod.PUT), is(false));
@@ -72,7 +72,7 @@ public class ConcatenationPostRequestHandlerTest {
     }
 
     @Test
-    public void testRegularUpload() throws Exception {
+    void testRegularUpload() throws Exception {
         TusServletResponse response = new TusServletResponse(this.servletResponse);
 
         UploadInfo info1 = new UploadInfo();
@@ -92,7 +92,7 @@ public class ConcatenationPostRequestHandlerTest {
     }
 
     @Test
-    public void testPartialUpload() throws Exception {
+    void testPartialUpload() throws Exception {
         TusServletResponse response = new TusServletResponse(this.servletResponse);
 
         UploadInfo info1 = new UploadInfo();
@@ -113,7 +113,7 @@ public class ConcatenationPostRequestHandlerTest {
     }
 
     @Test
-    public void testFinalUpload() throws Exception {
+    void testFinalUpload() throws Exception {
         TusServletResponse response = new TusServletResponse(this.servletResponse);
 
         UploadInfo info1 = new UploadInfo();
@@ -134,7 +134,7 @@ public class ConcatenationPostRequestHandlerTest {
     }
 
     @Test
-    public void testUploadNotFound() throws Exception {
+    void testUploadNotFound() throws Exception {
         TusServletResponse response = new TusServletResponse(this.servletResponse);
 
         response.setHeader(HttpHeader.LOCATION, "/test/upload/1234");

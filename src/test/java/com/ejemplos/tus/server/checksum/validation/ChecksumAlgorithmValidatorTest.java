@@ -22,7 +22,7 @@ import com.ejemplos.tus.server.HttpMethod;
 
 
 @ExtendWith(MockitoExtension.class)
-public class ChecksumAlgorithmValidatorTest {
+class ChecksumAlgorithmValidatorTest {
 
     private ChecksumAlgorithmValidator validator;
 
@@ -38,7 +38,7 @@ public class ChecksumAlgorithmValidatorTest {
     }
 
     @Test
-    public void supports() throws Exception {
+    void supports() throws Exception {
         assertThat(validator.supports(HttpMethod.GET), is(false));
         assertThat(validator.supports(HttpMethod.POST), is(false));
         assertThat(validator.supports(HttpMethod.PUT), is(false));
@@ -50,7 +50,7 @@ public class ChecksumAlgorithmValidatorTest {
     }
 
     @Test
-    public void testValid() throws Exception {
+    void testValid() throws Exception {
         servletRequest.addHeader(HttpHeader.UPLOAD_CHECKSUM, "sha1 1234567890");
 
         validator.validate(HttpMethod.PATCH, servletRequest, uploadStorageService, null);
@@ -59,7 +59,7 @@ public class ChecksumAlgorithmValidatorTest {
     }
 
     @Test
-    public void testNoHeader() throws Exception {
+    void testNoHeader() throws Exception {
         //servletRequest.addHeader(HttpHeader.UPLOAD_CHECKSUM, null);
 
         try {
@@ -70,7 +70,7 @@ public class ChecksumAlgorithmValidatorTest {
     }
 
     @Test
-    public void testInvalidHeader() throws Exception {
+    void testInvalidHeader() throws Exception {
         Throwable exception =
                 assertThrows(ChecksumAlgorithmNotSupportedException.class, () -> {
                     servletRequest.addHeader(HttpHeader.UPLOAD_CHECKSUM, "test 1234567890");

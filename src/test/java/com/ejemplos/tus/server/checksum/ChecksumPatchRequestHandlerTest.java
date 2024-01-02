@@ -29,7 +29,7 @@ import org.mockito.quality.Strictness;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class ChecksumPatchRequestHandlerTest {
+class ChecksumPatchRequestHandlerTest {
 
     private ChecksumPatchRequestHandler handler;
 
@@ -50,7 +50,7 @@ public class ChecksumPatchRequestHandlerTest {
     }
 
     @Test
-    public void supports() throws Exception {
+    void supports() throws Exception {
         assertThat(handler.supports(HttpMethod.GET), is(false));
         assertThat(handler.supports(HttpMethod.POST), is(false));
         assertThat(handler.supports(HttpMethod.PUT), is(false));
@@ -62,7 +62,7 @@ public class ChecksumPatchRequestHandlerTest {
     }
 
     @Test
-    public void testValidHeaderAndChecksum() throws Exception {
+    void testValidHeaderAndChecksum() throws Exception {
         when(servletRequest.getHeader(HttpHeader.UPLOAD_CHECKSUM)).thenReturn("sha1 1234567890");
         when(servletRequest.getCalculatedChecksum(ArgumentMatchers.any(ChecksumAlgorithm.class)))
                 .thenReturn("1234567890");
@@ -74,7 +74,7 @@ public class ChecksumPatchRequestHandlerTest {
     }
 
     @Test
-    public void testValidHeaderAndInvalidChecksum(){
+    void testValidHeaderAndInvalidChecksum(){
         Throwable exception = assertThrows(UploadChecksumMismatchException.class, () -> {
             when(servletRequest.getHeader(HttpHeader.UPLOAD_CHECKSUM)).thenReturn("sha1 1234567890");
             when(servletRequest.getCalculatedChecksum(ArgumentMatchers.any(ChecksumAlgorithm.class)))
@@ -86,7 +86,7 @@ public class ChecksumPatchRequestHandlerTest {
     }
 
     @Test
-    public void testNoHeader() throws Exception {
+    void testNoHeader() throws Exception {
         when(servletRequest.getHeader(HttpHeader.UPLOAD_CHECKSUM)).thenReturn(null);
 
         handler.process(HttpMethod.PATCH, servletRequest, null, uploadStorageService, null);
@@ -95,7 +95,7 @@ public class ChecksumPatchRequestHandlerTest {
     }
 
     @Test
-    public void testInvalidHeader() {
+    void testInvalidHeader() {
         Throwable exception = assertThrows(ChecksumAlgorithmNotSupportedException.class, () -> {
             when(servletRequest.getHeader(HttpHeader.UPLOAD_CHECKSUM)).thenReturn("test 1234567890");
             when(servletRequest.hasCalculatedChecksum()).thenReturn(true);

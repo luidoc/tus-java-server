@@ -34,7 +34,7 @@ import com.ejemplos.tus.server.HttpHeader;
 import com.ejemplos.tus.server.HttpMethod;
 
 @ExtendWith(MockitoExtension.class)
-public class CreationPatchRequestHandlerTest {
+class CreationPatchRequestHandlerTest {
 
     private CreationPatchRequestHandler handler;
 
@@ -53,7 +53,7 @@ public class CreationPatchRequestHandlerTest {
     }
 
     @Test
-    public void supports() throws Exception {
+    void supports() throws Exception {
         assertThat(handler.supports(HttpMethod.GET), is(false));
         assertThat(handler.supports(HttpMethod.POST), is(false));
         assertThat(handler.supports(HttpMethod.PUT), is(false));
@@ -66,7 +66,7 @@ public class CreationPatchRequestHandlerTest {
 
 
     @Test
-    public void processWithLengthAndHeader() throws Exception {
+    void processWithLengthAndHeader() throws Exception {
         UploadInfo info = new UploadInfo();
         info.setOffset(2L);
         info.setLength(10L);
@@ -81,7 +81,7 @@ public class CreationPatchRequestHandlerTest {
     }
 
     @Test
-    public void processWithLengthAndNoHeader() throws Exception {
+    void processWithLengthAndNoHeader() throws Exception {
         UploadInfo info = new UploadInfo();
         info.setOffset(2L);
         info.setLength(10L);
@@ -96,7 +96,7 @@ public class CreationPatchRequestHandlerTest {
     }
 
     @Test
-    public void processWithoutLengthAndHeader() throws Exception {
+    void processWithoutLengthAndHeader() throws Exception {
         UploadInfo info = new UploadInfo();
         info.setOffset(2L);
         info.setLength(null);
@@ -112,7 +112,7 @@ public class CreationPatchRequestHandlerTest {
     }
 
     @Test
-    public void processWithoutLengthAndNoHeader() throws Exception {
+    void processWithoutLengthAndNoHeader() throws Exception {
         UploadInfo info = new UploadInfo();
         info.setOffset(2L);
         info.setLength(null);
@@ -127,7 +127,7 @@ public class CreationPatchRequestHandlerTest {
     }
 
     @Test
-    public void processNotFound() throws Exception {
+    void processNotFound() throws Exception {
         when(uploadStorageService.getUploadInfo(nullable(String.class), nullable(String.class))).thenReturn(null);
 
         handler.process(HttpMethod.PATCH, new TusServletRequest(servletRequest),
@@ -135,7 +135,7 @@ public class CreationPatchRequestHandlerTest {
     }
 
     @Test
-    public void processAppendNotFound() throws Exception {
+    void processAppendNotFound() throws Exception {
         UploadInfo info = new UploadInfo();
         info.setId(new UploadId(UUID.randomUUID()));
         info.setOffset(10L);

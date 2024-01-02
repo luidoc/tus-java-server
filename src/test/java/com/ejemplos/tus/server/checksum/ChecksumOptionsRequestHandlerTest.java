@@ -17,7 +17,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import com.ejemplos.tus.server.HttpHeader;
 import com.ejemplos.tus.server.HttpMethod;
 
-public class ChecksumOptionsRequestHandlerTest {
+class ChecksumOptionsRequestHandlerTest {
 
     private ChecksumOptionsRequestHandler handler;
 
@@ -33,7 +33,7 @@ public class ChecksumOptionsRequestHandlerTest {
     }
 
     @Test
-    public void processListExtensions() throws Exception {
+    void processListExtensions() throws Exception {
 
         handler.process(HttpMethod.OPTIONS, new TusServletRequest(servletRequest),
                 new TusServletResponse(servletResponse), null, null);
@@ -46,7 +46,7 @@ public class ChecksumOptionsRequestHandlerTest {
     }
 
     @Test
-    public void supports() throws Exception {
+    void supports() throws Exception {
         MatcherAssert.assertThat(handler.supports(HttpMethod.GET), is(false));
         MatcherAssert.assertThat(handler.supports(HttpMethod.POST), is(false));
         MatcherAssert.assertThat(handler.supports(HttpMethod.PUT), is(false));

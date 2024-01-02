@@ -38,7 +38,7 @@ import com.ejemplos.tus.server.HttpMethod;
  * The Server MUST set the Location header to the URL of the created resource. This URL MAY be absolute or relative.
  */
 @ExtendWith(MockitoExtension.class)
-public class CreationPostRequestHandlerTest {
+class CreationPostRequestHandlerTest {
 
     private CreationPostRequestHandler handler;
 
@@ -57,7 +57,7 @@ public class CreationPostRequestHandlerTest {
     }
 
     @Test
-    public void supports() throws Exception {
+    void supports() throws Exception {
         assertThat(handler.supports(HttpMethod.GET), is(false));
         assertThat(handler.supports(HttpMethod.POST), is(true));
         assertThat(handler.supports(HttpMethod.PUT), is(false));
@@ -69,7 +69,7 @@ public class CreationPostRequestHandlerTest {
     }
 
     @Test
-    public void processWithLengthAndMetadata() throws Exception {
+    void processWithLengthAndMetadata() throws Exception {
         servletRequest.setRequestURI("/test/upload");
         servletRequest.addHeader(HttpHeader.UPLOAD_LENGTH, 10L);
         servletRequest.addHeader(HttpHeader.UPLOAD_METADATA, "encoded-metadata");
@@ -99,7 +99,7 @@ public class CreationPostRequestHandlerTest {
     }
 
     @Test
-    public void processWithLengthAndNoMetadata() throws Exception {
+    void processWithLengthAndNoMetadata() throws Exception {
         servletRequest.setRequestURI("/test/upload");
         servletRequest.addHeader(HttpHeader.UPLOAD_LENGTH, 10L);
         //servletRequest.addHeader(HttpHeader.UPLOAD_METADATA, null);
@@ -129,7 +129,7 @@ public class CreationPostRequestHandlerTest {
     }
 
     @Test
-    public void processWithNoLengthAndMetadata() throws Exception {
+    void processWithNoLengthAndMetadata() throws Exception {
         servletRequest.setRequestURI("/test/upload");
         //servletRequest.addHeader(HttpHeader.UPLOAD_LENGTH, null);
         servletRequest.addHeader(HttpHeader.UPLOAD_METADATA, "encoded-metadata");
@@ -159,7 +159,7 @@ public class CreationPostRequestHandlerTest {
     }
 
     @Test
-    public void processWithNoLengthAndNoMetadata() throws Exception {
+    void processWithNoLengthAndNoMetadata() throws Exception {
         servletRequest.setRequestURI("/test/upload");
         //servletRequest.addHeader(HttpHeader.UPLOAD_LENGTH, null);
         //servletRequest.addHeader(HttpHeader.UPLOAD_METADATA, null);

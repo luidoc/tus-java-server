@@ -25,7 +25,7 @@ import com.ejemplos.tus.server.HttpHeader;
 import com.ejemplos.tus.server.HttpMethod;
 
 @ExtendWith(MockitoExtension.class)
-public class CoreHeadRequestHandlerTest {
+class CoreHeadRequestHandlerTest {
 
     private CoreHeadRequestHandler handler;
 
@@ -44,7 +44,7 @@ public class CoreHeadRequestHandlerTest {
     }
 
     @Test
-    public void processWithLength() throws Exception {
+    void processWithLength() throws Exception {
         UploadInfo info = new UploadInfo();
         info.setOffset(2L);
         info.setLength(10L);
@@ -60,7 +60,7 @@ public class CoreHeadRequestHandlerTest {
     }
 
     @Test
-    public void processConcatenatedWithLength() throws Exception {
+    void processConcatenatedWithLength() throws Exception {
         UploadInfo info = new UploadInfo();
         info.setOffset(2L);
         info.setLength(10L);
@@ -77,7 +77,7 @@ public class CoreHeadRequestHandlerTest {
     }
 
     @Test
-    public void processWithoutLength() throws Exception {
+    void processWithoutLength() throws Exception {
         UploadInfo info = new UploadInfo();
         info.setOffset(0L);
         when(uploadStorageService.getUploadInfo(nullable(String.class), nullable(String.class))).thenReturn(info);
@@ -92,7 +92,7 @@ public class CoreHeadRequestHandlerTest {
     }
 
     @Test
-    public void supports() throws Exception {
+    void supports() throws Exception {
         assertThat(handler.supports(HttpMethod.GET), is(false));
         assertThat(handler.supports(HttpMethod.POST), is(false));
         assertThat(handler.supports(HttpMethod.PUT), is(false));

@@ -25,7 +25,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class VirtualConcatenationServiceTest {
+class VirtualConcatenationServiceTest {
 
     @Mock
     private UploadStorageService uploadStorageService;
@@ -38,7 +38,7 @@ public class VirtualConcatenationServiceTest {
     }
 
     @Test
-    public void merge() throws Exception {
+    void merge() throws Exception {
         UploadInfo child1 = new UploadInfo();
         child1.setId(new UploadId(UUID.randomUUID()));
         child1.setLength(5L);
@@ -70,7 +70,7 @@ public class VirtualConcatenationServiceTest {
     }
 
     @Test
-    public void mergeNotCompleted() throws Exception {
+    void mergeNotCompleted() throws Exception {
         UploadInfo child1 = new UploadInfo();
         child1.setId(new UploadId(UUID.randomUUID()));
         child1.setLength(5L);
@@ -102,7 +102,7 @@ public class VirtualConcatenationServiceTest {
     }
 
     @Test
-    public void mergeWithoutLength() throws Exception {
+    void mergeWithoutLength() throws Exception {
         UploadInfo child1 = new UploadInfo();
         child1.setId(new UploadId(UUID.randomUUID()));
         child1.setLength(null);
@@ -134,7 +134,7 @@ public class VirtualConcatenationServiceTest {
     }
 
     @Test
-    public void mergeNotFound() throws Exception {
+    void mergeNotFound() throws Exception {
         Throwable exception =
                 assertThrows(UploadNotFoundException.class, () -> {
 
@@ -164,7 +164,7 @@ public class VirtualConcatenationServiceTest {
     }
 
     @Test
-    public void mergeWithExpiration() throws Exception {
+    void mergeWithExpiration() throws Exception {
         UploadInfo child1 = new UploadInfo();
         child1.setId(new UploadId(UUID.randomUUID()));
         child1.setLength(5L);
@@ -206,7 +206,7 @@ public class VirtualConcatenationServiceTest {
     }
 
     @Test
-    public void getUploadsEmptyFinal() throws Exception {
+    void getUploadsEmptyFinal() throws Exception {
         UploadInfo infoParent = new UploadInfo();
         infoParent.setId(new UploadId(UUID.randomUUID()));
         infoParent.setConcatenationPartIds(null);
@@ -224,7 +224,7 @@ public class VirtualConcatenationServiceTest {
     }
 
     @Test
-    public void getConcatenatedBytes() throws Exception {
+    void getConcatenatedBytes() throws Exception {
         String upload1 = "This is a ";
         String upload2 = "concatenated upload!";
 
@@ -259,7 +259,7 @@ public class VirtualConcatenationServiceTest {
     }
 
     @Test
-    public void getConcatenatedBytesNotComplete() throws Exception {
+    void getConcatenatedBytesNotComplete() throws Exception {
         String upload1 = "This is a ";
         String upload2 = "concatenated upload!";
 
@@ -294,7 +294,7 @@ public class VirtualConcatenationServiceTest {
     }
 
     @Test
-    public void getConcatenatedBytesNotFound() throws Exception {
+    void getConcatenatedBytesNotFound() throws Exception {
         Throwable exception =
                 assertThrows(UploadNotFoundException.class, () -> {
 

@@ -14,10 +14,10 @@ import jakarta.servlet.http.HttpServletRequest;
 
 public abstract class AbstractTusExtension implements TusExtension {
 
-    private final List<RequestValidator> requestValidators = new LinkedList<RequestValidator>();
-    private final List<RequestHandler> requestHandlers = new LinkedList<RequestHandler>();
+    private final List<RequestValidator> requestValidators = new LinkedList<>();
+    private final List<RequestHandler> requestHandlers = new LinkedList<>();
 
-    public AbstractTusExtension() {
+    protected AbstractTusExtension() {
         initValidators(requestValidators);
         initRequestHandlers(requestHandlers);
     }

@@ -21,7 +21,7 @@ import com.ejemplos.tus.server.HttpHeader;
 import com.ejemplos.tus.server.HttpMethod;
 
 @ExtendWith(MockitoExtension.class)
-public class ContentLengthValidatorTest {
+class ContentLengthValidatorTest {
 
     private ContentLengthValidator validator;
 
@@ -37,7 +37,7 @@ public class ContentLengthValidatorTest {
     }
 
     @Test
-    public void validateValidLengthInitialUpload() throws Exception {
+    void validateValidLengthInitialUpload() throws Exception {
         UploadInfo info = new UploadInfo();
         info.setOffset(0L);
         info.setLength(10L);
@@ -56,7 +56,7 @@ public class ContentLengthValidatorTest {
     }
 
     @Test
-    public void validateValidLengthInProgressUpload() throws Exception {
+    void validateValidLengthInProgressUpload() throws Exception {
         UploadInfo info = new UploadInfo();
         info.setOffset(5L);
         info.setLength(10L);
@@ -75,7 +75,7 @@ public class ContentLengthValidatorTest {
     }
 
     @Test
-    public void validateValidLengthPartialUpload() throws Exception {
+    void validateValidLengthPartialUpload() throws Exception {
         UploadInfo info = new UploadInfo();
         info.setOffset(2L);
         info.setLength(10L);
@@ -94,7 +94,7 @@ public class ContentLengthValidatorTest {
     }
 
     @Test
-    public void validateInvalidLengthInitialUpload() throws Exception {
+    void validateInvalidLengthInitialUpload() throws Exception {
         UploadInfo info = new UploadInfo();
         info.setOffset(0L);
         info.setLength(10L);
@@ -112,7 +112,7 @@ public class ContentLengthValidatorTest {
     }
 
     @Test
-    public void validateInvalidLengthInProgressUpload() throws Exception {
+    void validateInvalidLengthInProgressUpload() throws Exception {
         UploadInfo info = new UploadInfo();
         info.setOffset(5L);
         info.setLength(10L);
@@ -130,7 +130,7 @@ public class ContentLengthValidatorTest {
     }
 
     @Test
-    public void validateInvalidLengthPartialUpload() throws Exception {
+    void validateInvalidLengthPartialUpload() throws Exception {
         UploadInfo info = new UploadInfo();
         info.setOffset(2L);
         info.setLength(10L);
@@ -148,7 +148,7 @@ public class ContentLengthValidatorTest {
     }
 
     @Test
-    public void validateMissingContentLength() throws Exception {
+    void validateMissingContentLength() throws Exception {
         UploadInfo info = new UploadInfo();
         info.setOffset(2L);
         info.setLength(10L);
@@ -168,7 +168,7 @@ public class ContentLengthValidatorTest {
     }
 
     @Test
-    public void validateMissingUploadInfo() throws Exception {
+    void validateMissingUploadInfo() throws Exception {
         when(uploadStorageService.getUploadInfo(nullable(String.class), nullable(String.class))).thenReturn(null);
 
         servletRequest.addHeader(HttpHeader.CONTENT_LENGTH, 3L);
@@ -184,7 +184,7 @@ public class ContentLengthValidatorTest {
     }
 
     @Test
-    public void supports() throws Exception {
+    void supports() throws Exception {
         assertThat(validator.supports(HttpMethod.GET), is(false));
         assertThat(validator.supports(HttpMethod.POST), is(false));
         assertThat(validator.supports(HttpMethod.PUT), is(false));

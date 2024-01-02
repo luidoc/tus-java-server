@@ -24,7 +24,7 @@ import com.ejemplos.tus.server.HttpMethod;
 import com.ejemplos.tus.server.TusFileUploadService;
 
 @ExtendWith(MockitoExtension.class)
-public class CoreOptionsRequestHandlerTest {
+class CoreOptionsRequestHandlerTest {
 
     private CoreOptionsRequestHandler handler;
 
@@ -43,7 +43,7 @@ public class CoreOptionsRequestHandlerTest {
     }
 
     @Test
-    public void processWithMaxSize() throws Exception {
+    void processWithMaxSize() throws Exception {
         when(uploadStorageService.getMaxUploadSize()).thenReturn(5368709120L);
 
         handler.process(HttpMethod.OPTIONS, new TusServletRequest(servletRequest),
@@ -55,7 +55,7 @@ public class CoreOptionsRequestHandlerTest {
     }
 
     @Test
-    public void processWithoutMaxSize() throws Exception {
+    void processWithoutMaxSize() throws Exception {
         when(uploadStorageService.getMaxUploadSize()).thenReturn(0L);
 
         handler.process(HttpMethod.OPTIONS, new TusServletRequest(servletRequest),
@@ -67,7 +67,7 @@ public class CoreOptionsRequestHandlerTest {
     }
 
     @Test
-    public void supports() throws Exception {
+    void supports() throws Exception {
         assertThat(handler.supports(HttpMethod.GET), is(false));
         assertThat(handler.supports(HttpMethod.POST), is(false));
         assertThat(handler.supports(HttpMethod.PUT), is(false));

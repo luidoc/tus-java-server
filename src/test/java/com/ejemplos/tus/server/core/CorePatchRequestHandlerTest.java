@@ -1,18 +1,7 @@
 package com.ejemplos.tus.server.core;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.nullable;
-import static org.mockito.Mockito.eq;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.io.InputStream;
-import java.util.UUID;
-
+import com.ejemplos.tus.server.HttpHeader;
+import com.ejemplos.tus.server.HttpMethod;
 import com.ejemplos.tus.server.exception.UploadNotFoundException;
 import com.ejemplos.tus.server.upload.UploadId;
 import com.ejemplos.tus.server.upload.UploadInfo;
@@ -20,21 +9,25 @@ import com.ejemplos.tus.server.upload.UploadStorageService;
 import com.ejemplos.tus.server.util.TusServletRequest;
 import com.ejemplos.tus.server.util.TusServletResponse;
 import jakarta.servlet.http.HttpServletResponse;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-import com.ejemplos.tus.server.HttpHeader;
-import com.ejemplos.tus.server.HttpMethod;
+import java.io.InputStream;
+import java.util.UUID;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.nullable;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class CorePatchRequestHandlerTest {
+class CorePatchRequestHandlerTest {
 
     private CorePatchRequestHandler handler;
 
@@ -53,7 +46,7 @@ public class CorePatchRequestHandlerTest {
     }
 
     @Test
-    public void supports() throws Exception {
+    void supports() throws Exception {
         assertThat(handler.supports(HttpMethod.GET), is(false));
         assertThat(handler.supports(HttpMethod.POST), is(false));
         assertThat(handler.supports(HttpMethod.PUT), is(false));
@@ -65,7 +58,7 @@ public class CorePatchRequestHandlerTest {
     }
 
     @Test
-    public void processInProgress() throws Exception {
+    void processInProgress() throws Exception {
         UploadInfo info = new UploadInfo();
         info.setId(new UploadId(UUID.randomUUID()));
         info.setOffset(2L);
@@ -89,7 +82,7 @@ public class CorePatchRequestHandlerTest {
     }
 
     @Test
-    public void processFinished() throws Exception {
+    void processFinished() throws Exception {
         UploadInfo info = new UploadInfo();
         info.setId(new UploadId(UUID.randomUUID()));
         info.setOffset(10L);
@@ -106,7 +99,7 @@ public class CorePatchRequestHandlerTest {
     }
 
     @Test
-    public void processNotFound() throws Exception {
+    void processNotFound() throws Exception {
         when(uploadStorageService.getUploadInfo(nullable(String.class), nullable(String.class))).thenReturn(null);
 
         handler.process(HttpMethod.PATCH, new TusServletRequest(servletRequest),
@@ -118,7 +111,7 @@ public class CorePatchRequestHandlerTest {
     }
 
     @Test
-    public void processAppendNotFound() throws Exception {
+    void processAppendNotFound() throws Exception {
         UploadInfo info = new UploadInfo();
         info.setId(new UploadId(UUID.randomUUID()));
         info.setOffset(10L);

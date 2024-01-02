@@ -15,7 +15,7 @@ import com.ejemplos.tus.server.HttpHeader;
 import com.ejemplos.tus.server.HttpMethod;
 
 
-public class ContentTypeValidatorTest {
+class ContentTypeValidatorTest {
 
     private ContentTypeValidator validator;
 
@@ -28,7 +28,7 @@ public class ContentTypeValidatorTest {
     }
 
     @Test
-    public void validateValid() throws Exception {
+    void validateValid() throws Exception {
         servletRequest.addHeader(HttpHeader.CONTENT_TYPE, ContentTypeValidator.APPLICATION_OFFSET_OCTET_STREAM);
 
         try {
@@ -41,7 +41,7 @@ public class ContentTypeValidatorTest {
     }
 
     @Test
-    public void validateInvalidHeader() throws Exception {
+    void validateInvalidHeader() throws Exception {
         servletRequest.addHeader(HttpHeader.CONTENT_TYPE, "application/octet-stream");
         Throwable exception =
                 assertThrows(InvalidContentTypeException.class, () -> {
@@ -51,7 +51,7 @@ public class ContentTypeValidatorTest {
     }
 
     @Test
-    public void validateMissingHeader() throws Exception {
+    void validateMissingHeader() throws Exception {
         //We don't set the header
         //servletRequest.addHeader(HttpHeader.CONTENT_TYPE, ContentTypeValidator.APPLICATION_OFFSET_OCTET_STREAM);
         Throwable exception =
@@ -63,7 +63,7 @@ public class ContentTypeValidatorTest {
     }
 
     @Test
-    public void supports() throws Exception {
+    void supports() throws Exception {
         assertThat(validator.supports(HttpMethod.GET), is(false));
         assertThat(validator.supports(HttpMethod.POST), is(false));
         assertThat(validator.supports(HttpMethod.PUT), is(false));
