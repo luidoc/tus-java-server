@@ -220,7 +220,7 @@ public class DiskStorageService extends AbstractDiskBasedService implements Uplo
 
     @Override
     public void setUploadConcatenationService(UploadConcatenationService concatenationService) {
-        Validate.notNull(concatenationService);
+        Objects.requireNonNull(concatenationService);
         this.uploadConcatenationService = concatenationService;
     }
 
