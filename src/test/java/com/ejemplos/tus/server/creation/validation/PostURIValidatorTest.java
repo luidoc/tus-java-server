@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.when;
 
-import com.ejemplos.tus.server.exception.InvalidContentTypeException;
 import com.ejemplos.tus.server.exception.PostOnInvalidRequestURIException;
 import com.ejemplos.tus.server.upload.UploadStorageService;
 
@@ -14,14 +13,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import com.ejemplos.tus.server.HttpMethod;
 
 @ExtendWith(MockitoExtension.class)
-public class PostURIValidatorTest {
+class PostURIValidatorTest {
 
     private PostURIValidator validator;
 
@@ -37,7 +35,7 @@ public class PostURIValidatorTest {
     }
 
     @Test
-    public void supports() throws Exception {
+    void supports() {
         assertThat(validator.supports(HttpMethod.GET), is(false));
         assertThat(validator.supports(HttpMethod.POST), is(true));
         assertThat(validator.supports(HttpMethod.PUT), is(false));
@@ -49,7 +47,7 @@ public class PostURIValidatorTest {
     }
 
     @Test
-    public void validateMatchingUrl() throws Exception {
+    void validateMatchingUrl() throws Exception {
         servletRequest.setRequestURI("/test/upload");
         when(uploadStorageService.getUploadURI()).thenReturn("/test/upload");
 
@@ -59,24 +57,23 @@ public class PostURIValidatorTest {
             fail();
         }
 
-        //No Exception is thrown
+        // No Exception is thrown
     }
 
     @Test
-    public void validateInvalidUrl() throws Exception {
-        Throwable exception =
-                assertThrows(PostOnInvalidRequestURIException.class, () -> {
+    void validateInvalidUrl() {
+        assertThrows(PostOnInvalidRequestURIException.class, () -> {
 
-                            servletRequest.setRequestURI("/test/upload/12");
-                            when(uploadStorageService.getUploadURI()).thenReturn("/test/upload");
+            servletRequest.setRequestURI("/test/upload/12");
+            when(uploadStorageService.getUploadURI()).thenReturn("/test/upload");
 
-                            validator.validate(HttpMethod.POST, servletRequest, uploadStorageService, null);
-                        });
-        //Expect PostOnInvalidRequestURIException
+            validator.validate(HttpMethod.POST, servletRequest, uploadStorageService, null);
+        });
+        // Expect PostOnInvalidRequestURIException
     }
 
     @Test
-    public void validateMatchingRegexUrl() throws Exception {
+    void validateMatchingRegexUrl() throws Exception {
         servletRequest.setRequestURI("/users/1234/files/upload");
         when(uploadStorageService.getUploadURI()).thenReturn("/users/[0-9]+/files/upload");
 
@@ -86,32 +83,30 @@ public class PostURIValidatorTest {
             fail();
         }
 
-        //No Exception is thrown
+        // No Exception is thrown
     }
 
     @Test
-    public void validateInvalidRegexUrl() throws Exception {
-        Throwable exception =
-                assertThrows(PostOnInvalidRequestURIException.class, () -> {
+    void validateInvalidRegexUrl() {
+        assertThrows(PostOnInvalidRequestURIException.class, () -> {
 
-                            servletRequest.setRequestURI("/users/abc123/files/upload");
-                            when(uploadStorageService.getUploadURI()).thenReturn("/users/[0-9]+/files/upload");
+            servletRequest.setRequestURI("/users/abc123/files/upload");
+            when(uploadStorageService.getUploadURI()).thenReturn("/users/[0-9]+/files/upload");
 
-                            validator.validate(HttpMethod.POST, servletRequest, uploadStorageService, null);
-                        });
-        //Expect PostOnInvalidRequestURIException
+            validator.validate(HttpMethod.POST, servletRequest, uploadStorageService, null);
+        });
+        // Expect PostOnInvalidRequestURIException
     }
 
     @Test
-    public void validateInvalidRegexUrlPatchUrl() throws Exception {
-        Throwable exception =
-                assertThrows(PostOnInvalidRequestURIException.class, () -> {
+    void validateInvalidRegexUrlPatchUrl() {
+        assertThrows(PostOnInvalidRequestURIException.class, () -> {
 
-                            servletRequest.setRequestURI("/users/1234/files/upload/7669c72a-3f2a-451f-a3b9-9210e7a4c02f");
-                            when(uploadStorageService.getUploadURI()).thenReturn("/users/[0-9]+/files/upload");
+            servletRequest.setRequestURI("/users/1234/files/upload/7669c72a-3f2a-451f-a3b9-9210e7a4c02f");
+            when(uploadStorageService.getUploadURI()).thenReturn("/users/[0-9]+/files/upload");
 
-                            validator.validate(HttpMethod.POST, servletRequest, uploadStorageService, null);
-                        });
-        //Expect PostOnInvalidRequestURIException
+            validator.validate(HttpMethod.POST, servletRequest, uploadStorageService, null);
+        });
+        // Expect PostOnInvalidRequestURIException
     }
 }

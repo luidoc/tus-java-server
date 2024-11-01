@@ -7,7 +7,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class UUIDUploadIdFactoryTest {
+class UUIDUploadIdFactoryTest {
 
     private UploadIdFactory idFactory;
 
@@ -17,52 +17,48 @@ public class UUIDUploadIdFactoryTest {
     }
 
     @Test
-    public void setUploadURINull() throws Exception {
-        Throwable exception =
-                assertThrows(NullPointerException.class, () -> {
+    void setUploadURINull() {
+        assertThrows(NullPointerException.class, () -> {
 
-                    idFactory.setUploadURI(null);
-                });
+            idFactory.setUploadURI(null);
+        });
     }
 
     @Test
-    public void setUploadURINoTrailingSlash() throws Exception {
+    void setUploadURINoTrailingSlash() {
         idFactory.setUploadURI("/test/upload");
         assertThat(idFactory.getUploadURI(), is("/test/upload"));
     }
 
     @Test
-    public void setUploadURIWithTrailingSlash() throws Exception {
+    void setUploadURIWithTrailingSlash() {
         idFactory.setUploadURI("/test/upload/");
         assertThat(idFactory.getUploadURI(), is("/test/upload/"));
     }
 
     @Test
-    public void setUploadURIBlank() throws Exception {
-        Throwable exception =
-                assertThrows(IllegalArgumentException.class, () -> {
-                    idFactory.setUploadURI(" ");
-                });
+    void setUploadURIBlank() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            idFactory.setUploadURI(" ");
+        });
     }
 
     @Test
-    public void setUploadURINoStartingSlash() throws Exception {
-        Throwable exception =
-                assertThrows(IllegalArgumentException.class, () -> {
-                    idFactory.setUploadURI("test/upload/");
-                });
+    void setUploadURINoStartingSlash() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            idFactory.setUploadURI("test/upload/");
+        });
     }
 
     @Test
-    public void setUploadURIEndsWithDollar() throws Exception {
-        Throwable exception =
-                assertThrows(IllegalArgumentException.class, () -> {
-                    idFactory.setUploadURI("/test/upload$");
-                });
+    void setUploadURIEndsWithDollar() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            idFactory.setUploadURI("/test/upload$");
+        });
     }
 
     @Test
-    public void readUploadId() throws Exception {
+    void readUploadId() {
         idFactory.setUploadURI("/test/upload");
 
         assertThat(idFactory.readUploadId("/test/upload/1911e8a4-6939-490c-b58b-a5d70f8d91fb"),
@@ -70,7 +66,7 @@ public class UUIDUploadIdFactoryTest {
     }
 
     @Test
-    public void readUploadIdRegex() throws Exception {
+    void readUploadIdRegex() {
         idFactory.setUploadURI("/users/[0-9]+/files/upload");
 
         assertThat(idFactory.readUploadId("/users/1337/files/upload/1911e8a4-6939-490c-b58b-a5d70f8d91fb"),
@@ -78,7 +74,7 @@ public class UUIDUploadIdFactoryTest {
     }
 
     @Test
-    public void readUploadIdTrailingSlash() throws Exception {
+    void readUploadIdTrailingSlash() {
         idFactory.setUploadURI("/test/upload/");
 
         assertThat(idFactory.readUploadId("/test/upload/1911e8a4-6939-490c-b58b-a5d70f8d91fb"),
@@ -86,7 +82,7 @@ public class UUIDUploadIdFactoryTest {
     }
 
     @Test
-    public void readUploadIdRegexTrailingSlash() throws Exception {
+    void readUploadIdRegexTrailingSlash() {
         idFactory.setUploadURI("/users/[0-9]+/files/upload/");
 
         assertThat(idFactory.readUploadId("/users/123456789/files/upload/1911e8a4-6939-490c-b58b-a5d70f8d91fb"),
@@ -94,14 +90,14 @@ public class UUIDUploadIdFactoryTest {
     }
 
     @Test
-    public void readUploadIdNoUUID() throws Exception {
+    void readUploadIdNoUUID() {
         idFactory.setUploadURI("/test/upload");
 
         assertThat(idFactory.readUploadId("/test/upload/not-a-uuid-value"), is(nullValue()));
     }
 
     @Test
-    public void readUploadIdRegexNoMatch() throws Exception {
+    void readUploadIdRegexNoMatch() {
         idFactory.setUploadURI("/users/[0-9]+/files/upload");
 
         assertThat(idFactory.readUploadId("/users/files/upload/1911e8a4-6939-490c-b58b-a5d70f8d91fb"),
@@ -109,7 +105,7 @@ public class UUIDUploadIdFactoryTest {
     }
 
     @Test
-    public void createId() throws Exception {
+    void createId() {
         assertThat(idFactory.createId(), not(nullValue()));
     }
 

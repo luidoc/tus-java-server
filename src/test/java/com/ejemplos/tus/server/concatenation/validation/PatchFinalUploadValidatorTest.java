@@ -26,7 +26,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import com.ejemplos.tus.server.HttpMethod;
 
 @ExtendWith(MockitoExtension.class)
-public class PatchFinalUploadValidatorTest {
+class PatchFinalUploadValidatorTest {
 
     private PatchFinalUploadValidator validator;
 
@@ -42,7 +42,7 @@ public class PatchFinalUploadValidatorTest {
     }
 
     @Test
-    public void supports() throws Exception {
+    void supports() {
         assertThat(validator.supports(HttpMethod.GET), is(false));
         assertThat(validator.supports(HttpMethod.POST), is(false));
         assertThat(validator.supports(HttpMethod.PUT), is(false));
@@ -54,7 +54,7 @@ public class PatchFinalUploadValidatorTest {
     }
 
     @Test
-    public void testValid() throws Exception {
+    void testValid() throws Exception {
         UploadInfo info1 = new UploadInfo();
         info1.setId(new UploadId(UUID.randomUUID()));
         info1.setUploadType(UploadType.REGULAR);
@@ -74,7 +74,7 @@ public class PatchFinalUploadValidatorTest {
         when(uploadStorageService.getUploadInfo(eq(info3.getId().toString()),
                 nullable(String.class))).thenReturn(info3);
 
-        //When we validate the requests
+        // When we validate the requests
         try {
             servletRequest.setRequestURI(info1.getId().toString());
             validator.validate(HttpMethod.PATCH, servletRequest, uploadStorageService, null);
@@ -88,13 +88,13 @@ public class PatchFinalUploadValidatorTest {
             fail();
         }
 
-        //No exception is thrown
+        // No exception is thrown
     }
 
     @Test
-    public void testValidNotFound() throws Exception {
+    void testValidNotFound() throws Exception {
         try {
-            //When we validate the request
+            // When we validate the request
             servletRequest.setRequestURI("/upload/test");
             validator.validate(HttpMethod.PATCH, servletRequest, uploadStorageService, null);
         } catch (Exception ex) {
@@ -103,7 +103,7 @@ public class PatchFinalUploadValidatorTest {
     }
 
     @Test
-    public void testInvalidFinal() throws Exception {
+    void testInvalidFinal() throws Exception {
         UploadInfo info1 = new UploadInfo();
         info1.setId(new UploadId(UUID.randomUUID()));
         info1.setUploadType(UploadType.CONCATENATED);
@@ -111,11 +111,10 @@ public class PatchFinalUploadValidatorTest {
         when(uploadStorageService.getUploadInfo(eq(info1.getId().toString()),
                 nullable(String.class))).thenReturn(info1);
 
-        //When we validate the request
-        Throwable exception =
-                assertThrows(PatchOnFinalUploadNotAllowedException.class, () -> {
-                    servletRequest.setRequestURI(info1.getId().toString());
-                    validator.validate(HttpMethod.PATCH, servletRequest, uploadStorageService, null);
-                });
+        // When we validate the request
+        assertThrows(PatchOnFinalUploadNotAllowedException.class, () -> {
+            servletRequest.setRequestURI(info1.getId().toString());
+            validator.validate(HttpMethod.PATCH, servletRequest, uploadStorageService, null);
+        });
     }
 }

@@ -26,7 +26,7 @@ import com.ejemplos.tus.server.HttpMethod;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class PartialUploadsExistValidatorTest {
+class PartialUploadsExistValidatorTest {
 
     private PartialUploadsExistValidator validator;
 
@@ -42,7 +42,7 @@ public class PartialUploadsExistValidatorTest {
     }
 
     @Test
-    public void supports() throws Exception {
+    void supports() {
         assertThat(validator.supports(HttpMethod.GET), is(false));
         assertThat(validator.supports(HttpMethod.POST), is(true));
         assertThat(validator.supports(HttpMethod.PUT), is(false));
@@ -54,7 +54,7 @@ public class PartialUploadsExistValidatorTest {
     }
 
     @Test
-    public void testValid() throws Exception {
+    void testValid() throws Exception {
         UploadInfo info1 = new UploadInfo();
         info1.setId(new UploadId(UUID.randomUUID()));
 
@@ -66,14 +66,14 @@ public class PartialUploadsExistValidatorTest {
 
         servletRequest.addHeader(HttpHeader.UPLOAD_CONCAT, String.format("final; %s %s", info1.getId(), info2.getId()));
 
-        //When we validate the request
+        // When we validate the request
         validator.validate(HttpMethod.POST, servletRequest, uploadStorageService, null);
 
-        //No exception is thrown
+        // No exception is thrown
     }
 
     @Test
-    public void testInvalidUploadNotFound() throws Exception {
+    void testInvalidUploadNotFound() throws Exception {
         UploadInfo info1 = new UploadInfo();
         info1.setId(new UploadId(UUID.randomUUID()));
 
@@ -82,51 +82,47 @@ public class PartialUploadsExistValidatorTest {
         servletRequest.addHeader(HttpHeader.UPLOAD_CONCAT,
                 String.format("final; %s %s", info1.getId(), UUID.randomUUID()));
 
-        //When we validate the request
-        Throwable exception =
-                assertThrows(InvalidPartialUploadIdException.class, () -> {
-                    validator.validate(HttpMethod.POST, servletRequest, uploadStorageService, null);
-                });
+        // When we validate the request
+        assertThrows(InvalidPartialUploadIdException.class, () -> {
+            validator.validate(HttpMethod.POST, servletRequest, uploadStorageService, null);
+        });
     }
 
     @Test
-    public void testInvalidId() throws Exception {
+    void testInvalidId() {
         UploadInfo info1 = new UploadInfo();
         info1.setId(new UploadId(UUID.randomUUID()));
-        Throwable exception =
-                assertThrows(InvalidPartialUploadIdException.class, () -> {
-                    when(uploadStorageService.getUploadInfo(info1.getId().toString(), null)).thenReturn(info1);
+        assertThrows(InvalidPartialUploadIdException.class, () -> {
+            when(uploadStorageService.getUploadInfo(info1.getId().toString(), null)).thenReturn(info1);
 
-                    servletRequest.addHeader(HttpHeader.UPLOAD_CONCAT, String.format("final; %s %s", info1.getId(), "test"));
+            servletRequest.addHeader(HttpHeader.UPLOAD_CONCAT, String.format("final; %s %s", info1.getId(), "test"));
 
-                    //When we validate the request
-                    validator.validate(HttpMethod.POST, servletRequest, uploadStorageService, null);
-                });
+            // When we validate the request
+            validator.validate(HttpMethod.POST, servletRequest, uploadStorageService, null);
+        });
     }
 
     @Test
-    public void testInvalidNoUploads1() throws Exception {
+    void testInvalidNoUploads1() {
         servletRequest.addHeader(HttpHeader.UPLOAD_CONCAT, "final;   ");
 
-        //When we validate the request
-        Throwable exception =
-                assertThrows(InvalidPartialUploadIdException.class, () -> {
-                            validator.validate(HttpMethod.POST, servletRequest, uploadStorageService, null);
-                        });
+        // When we validate the request
+        assertThrows(InvalidPartialUploadIdException.class, () -> {
+            validator.validate(HttpMethod.POST, servletRequest, uploadStorageService, null);
+        });
 
-        //No Exception is thrown
+        // No Exception is thrown
     }
 
     @Test
-    public void testInvalidNoUploads2() throws Exception {
+    void testInvalidNoUploads2() {
         servletRequest.addHeader(HttpHeader.UPLOAD_CONCAT, "final;");
 
-        //When we validate the request
-        Throwable exception =
-                assertThrows(InvalidPartialUploadIdException.class, () -> {
-                            validator.validate(HttpMethod.POST, servletRequest, uploadStorageService, null);
-                        });
+        // When we validate the request
+        assertThrows(InvalidPartialUploadIdException.class, () -> {
+            validator.validate(HttpMethod.POST, servletRequest, uploadStorageService, null);
+        });
 
-        //No Exception is thrown
+        // No Exception is thrown
     }
 }

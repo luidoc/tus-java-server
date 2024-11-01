@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.when;
 
-import com.ejemplos.tus.server.exception.InvalidContentTypeException;
 import com.ejemplos.tus.server.exception.UploadNotFoundException;
 import com.ejemplos.tus.server.upload.UploadInfo;
 import com.ejemplos.tus.server.upload.UploadStorageService;
@@ -16,14 +15,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import com.ejemplos.tus.server.HttpMethod;
 
 @ExtendWith(MockitoExtension.class)
-public class IdExistsValidatorTest {
+class IdExistsValidatorTest {
 
     private IdExistsValidator validator;
 
@@ -39,7 +37,7 @@ public class IdExistsValidatorTest {
     }
 
     @Test
-    public void validateValid() throws Exception {
+    void validateValid() throws Exception {
         UploadInfo info = new UploadInfo();
         info.setOffset(0L);
         info.setLength(10L);
@@ -56,8 +54,7 @@ public class IdExistsValidatorTest {
     }
 
     @Test
-    public void validateInvalid() throws Exception {
-        Throwable exception =
+    void validateInvalid() {
                 assertThrows(UploadNotFoundException.class, () -> {
 
                             when(uploadStorageService.getUploadInfo(nullable(String.class), nullable(String.class))).thenReturn(null);
@@ -69,7 +66,7 @@ public class IdExistsValidatorTest {
     }
 
     @Test
-    public void supports() throws Exception {
+    void supports() {
         assertThat(validator.supports(HttpMethod.GET), is(true));
         assertThat(validator.supports(HttpMethod.POST), is(false));
         assertThat(validator.supports(HttpMethod.PUT), is(false));

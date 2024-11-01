@@ -6,14 +6,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import com.ejemplos.tus.server.exception.InvalidContentTypeException;
-import com.ejemplos.tus.server.exception.UploadChecksumMismatchException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import com.ejemplos.tus.server.HttpHeader;
 import com.ejemplos.tus.server.HttpMethod;
-
 
 class ContentTypeValidatorTest {
 
@@ -37,33 +35,32 @@ class ContentTypeValidatorTest {
             fail();
         }
 
-        //No exception is thrown
+        // No exception is thrown
     }
 
     @Test
-    void validateInvalidHeader() throws Exception {
+    void validateInvalidHeader() {
         servletRequest.addHeader(HttpHeader.CONTENT_TYPE, "application/octet-stream");
-        Throwable exception =
-                assertThrows(InvalidContentTypeException.class, () -> {
-                            validator.validate(HttpMethod.PATCH, servletRequest, null, null);
-                        });
-        //Expect a InvalidContentTypeException exception
+
+        assertThrows(InvalidContentTypeException.class, () -> {
+            validator.validate(HttpMethod.PATCH, servletRequest, null, null);
+        });
+        // Expect a InvalidContentTypeException exception
     }
 
     @Test
-    void validateMissingHeader() throws Exception {
-        //We don't set the header
-        //servletRequest.addHeader(HttpHeader.CONTENT_TYPE, ContentTypeValidator.APPLICATION_OFFSET_OCTET_STREAM);
-        Throwable exception =
-                assertThrows(InvalidContentTypeException.class, () -> {
+    void validateMissingHeader() {
+        // We don't set the header
+        // servletRequest.addHeader(HttpHeader.CONTENT_TYPE,
+        assertThrows(InvalidContentTypeException.class, () -> {
 
-                            validator.validate(HttpMethod.PATCH, servletRequest, null, null);
-                        });
-        //Expect a InvalidContentTypeException exception
+            validator.validate(HttpMethod.PATCH, servletRequest, null, null);
+        });
+        // Expect a InvalidContentTypeException exception
     }
 
     @Test
-    void supports() throws Exception {
+    void supports() {
         assertThat(validator.supports(HttpMethod.GET), is(false));
         assertThat(validator.supports(HttpMethod.POST), is(false));
         assertThat(validator.supports(HttpMethod.PUT), is(false));

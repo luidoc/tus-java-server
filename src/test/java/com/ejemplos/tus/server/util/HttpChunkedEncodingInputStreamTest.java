@@ -1,6 +1,5 @@
 package com.ejemplos.tus.server.util;
 
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -9,14 +8,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import com.ejemplos.tus.server.exception.InvalidContentTypeException;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class HttpChunkedEncodingInputStreamTest {
+class HttpChunkedEncodingInputStreamTest {
 
     Map<String, List<String>> trailerHeaders;
 
@@ -26,7 +24,7 @@ public class HttpChunkedEncodingInputStreamTest {
     }
 
     @Test
-    public void chunkedWithoutHeaders() throws IOException {
+    void chunkedWithoutHeaders() throws IOException {
         String content = "4\r\n" +
                 "Wiki\r\n" +
                 "5\r\n" +
@@ -53,7 +51,7 @@ public class HttpChunkedEncodingInputStreamTest {
     }
 
     @Test
-    public void chunkedWithHeaders() throws IOException {
+    void chunkedWithHeaders() throws IOException {
         String content = "8\r\n" +
                 "Mozilla \r\n" +
                 "A\r\n" +
@@ -79,7 +77,7 @@ public class HttpChunkedEncodingInputStreamTest {
     }
 
     @Test
-    public void chunkedWithFoldedHeaders() throws IOException {
+    void chunkedWithFoldedHeaders() throws IOException {
         String content = "8\r\n" +
                 "Mozilla \r\n" +
                 "A\r\n" +
@@ -109,7 +107,7 @@ public class HttpChunkedEncodingInputStreamTest {
     }
 
     @Test
-    public void testChunkedInputStream() throws IOException {
+    void testChunkedInputStream() throws IOException {
         String correctInput = "10;key=\"value\r\n" +
                 "newline\"\r\n" +
                 "1234567890" +
@@ -122,7 +120,7 @@ public class HttpChunkedEncodingInputStreamTest {
 
         String correctResult = "123456789012345612345";
 
-        //Test for when buffer is larger than chunk size
+        // Test for when buffer is larger than chunk size
         InputStream in = new HttpChunkedEncodingInputStream(IOUtils.toInputStream(correctInput, StandardCharsets.UTF_8),
                 trailerHeaders);
         StringWriter writer = new StringWriter();
@@ -136,8 +134,8 @@ public class HttpChunkedEncodingInputStreamTest {
     }
 
     @Test
-    public void testCorruptChunkedInputStream1() throws IOException {
-        //missing \r\n at the end of the first chunk
+    void testCorruptChunkedInputStream1() {
+        // missing \r\n at the end of the first chunk
         String corruptInput = "10;key=\"val\\ue\"\r\n" +
                 "1234567890" +
                 "12345\r\n" +
@@ -146,18 +144,18 @@ public class HttpChunkedEncodingInputStreamTest {
                 "0\r\n" +
                 "Footer1: abcde\r\n" +
                 "Footer2: fghij\r\n";
-        Throwable exception =
-                assertThrows(IOException.class, () -> {
+        assertThrows(IOException.class, () -> {
 
-                    InputStream in = new HttpChunkedEncodingInputStream(IOUtils.toInputStream(corruptInput, StandardCharsets.UTF_8),
-                            trailerHeaders);
-                    StringWriter writer = new StringWriter();
-                    IOUtils.copy(in, writer, StandardCharsets.UTF_8);
-                });
+            InputStream in = new HttpChunkedEncodingInputStream(
+                    IOUtils.toInputStream(corruptInput, StandardCharsets.UTF_8),
+                    trailerHeaders);
+            StringWriter writer = new StringWriter();
+            IOUtils.copy(in, writer, StandardCharsets.UTF_8);
+        });
     }
 
     @Test
-    public void testEmptyChunkedInputStream() throws IOException {
+    void testEmptyChunkedInputStream() throws IOException {
         String input = "0\r\n";
         InputStream in = new HttpChunkedEncodingInputStream(IOUtils.toInputStream(input, StandardCharsets.UTF_8),
                 trailerHeaders);
@@ -167,7 +165,7 @@ public class HttpChunkedEncodingInputStreamTest {
     }
 
     @Test
-    public void testReadPartialByteArray() throws IOException {
+    void testReadPartialByteArray() throws IOException {
         String input = "A\r\n0123456789\r\n0\r\n";
         InputStream in = new HttpChunkedEncodingInputStream(IOUtils.toInputStream(input, StandardCharsets.UTF_8),
                 trailerHeaders);
@@ -180,7 +178,7 @@ public class HttpChunkedEncodingInputStreamTest {
     }
 
     @Test
-    public void testReadByte() throws IOException {
+    void testReadByte() throws IOException {
         String input = "4\r\n" +
                 "0123\r\n" +
                 "6\r\n" +
@@ -202,33 +200,33 @@ public class HttpChunkedEncodingInputStreamTest {
     }
 
     @Test
-    public void testReadEof() throws IOException {
+    void testReadEof() throws IOException {
         String input = "A\r\n0123456789\r\n0\r\n";
-        InputStream in = new HttpChunkedEncodingInputStream(IOUtils.toInputStream(input, StandardCharsets.UTF_8),
-                trailerHeaders);
+        try (InputStream in = new HttpChunkedEncodingInputStream(IOUtils.toInputStream(input, StandardCharsets.UTF_8),
+                trailerHeaders)) {
+            byte[] byteArray = new byte[10];
+            in.read(byteArray);
 
-        byte[] byteArray = new byte[10];
-        in.read(byteArray);
-
-        assertEquals(-1, in.read());
-        assertEquals(-1, in.read());
+            assertEquals(-1, in.read());
+            assertEquals(-1, in.read());
+        }
     }
 
     @Test
-    public void testReadEof2() throws IOException {
+    void testReadEof2() throws IOException {
         String input = "A\r\n0123456789\r\n0\r\n";
-        InputStream in = new HttpChunkedEncodingInputStream(IOUtils.toInputStream(input, StandardCharsets.UTF_8),
-                trailerHeaders);
+        try (InputStream in = new HttpChunkedEncodingInputStream(IOUtils.toInputStream(input, StandardCharsets.UTF_8),
+                trailerHeaders)) {
+            byte[] byteArray = new byte[10];
+            in.read(byteArray);
 
-        byte[] byteArray = new byte[10];
-        in.read(byteArray);
-
-        assertEquals(-1, in.read(byteArray));
-        assertEquals(-1, in.read(byteArray));
+            assertEquals(-1, in.read(byteArray));
+            assertEquals(-1, in.read(byteArray));
+        }
     }
 
     @Test
-    public void testReadClosed() throws IOException {
+    void testReadClosed() throws IOException {
         String input = "A\r\n0123456789\r\n0\r\n";
         InputStream in = new HttpChunkedEncodingInputStream(IOUtils.toInputStream(input, StandardCharsets.UTF_8),
                 trailerHeaders);
@@ -250,30 +248,28 @@ public class HttpChunkedEncodingInputStreamTest {
             assertTrue(ex instanceof IOException);
         }
 
-        //double close has not effect
+        // double close has not effect
         in.close();
     }
 
     @Test
-    public void testNullInputstream() throws IOException {
-        Throwable exception =
-                assertThrows(IllegalArgumentException.class, () -> {
-
-                    InputStream in = new HttpChunkedEncodingInputStream(null);
-                });
+    void testNullInputstream() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            HttpChunkedEncodingInputStream stream = new HttpChunkedEncodingInputStream(null);
+            stream.close();
+        });
     }
 
     @Test
-    public void testNegativeChunkSize() throws IOException {
+    void testNegativeChunkSize() {
         String input = "-A\r\n0123456789\r\n0\r\n";
-        Throwable exception =
-                assertThrows(IOException.class, () -> {
+        assertThrows(IOException.class, () -> {
 
-                    InputStream in = new HttpChunkedEncodingInputStream(IOUtils.toInputStream(input, StandardCharsets.UTF_8),
-                            trailerHeaders);
-
-                    byte[] byteArray = new byte[10];
-                    in.read(byteArray);
-                });
+            try (InputStream in = new HttpChunkedEncodingInputStream(IOUtils.toInputStream(input, StandardCharsets.UTF_8),
+                    trailerHeaders)) {
+                byte[] byteArray = new byte[10];
+                in.read(byteArray);
+            }
+        });
     }
 }

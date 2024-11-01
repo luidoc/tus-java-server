@@ -8,7 +8,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class TimeBasedUploadIdFactoryTest {
+class TimeBasedUploadIdFactoryTest {
 
     private UploadIdFactory idFactory;
 
@@ -18,8 +18,7 @@ public class TimeBasedUploadIdFactoryTest {
     }
 
     @Test
-    public void setUploadURINull() throws Exception {
-        Throwable exception =
+    void setUploadURINull() {
                 assertThrows(NullPointerException.class, () -> {
 
                     idFactory.setUploadURI(null);
@@ -27,20 +26,19 @@ public class TimeBasedUploadIdFactoryTest {
     }
 
     @Test
-    public void setUploadURINoTrailingSlash() throws Exception {
+    void setUploadURINoTrailingSlash() {
         idFactory.setUploadURI("/test/upload");
         assertThat(idFactory.getUploadURI(), is("/test/upload"));
     }
 
     @Test
-    public void setUploadURIWithTrailingSlash() throws Exception {
+    void setUploadURIWithTrailingSlash() {
         idFactory.setUploadURI("/test/upload/");
         assertThat(idFactory.getUploadURI(), is("/test/upload/"));
     }
 
     @Test
-    public void setUploadURIBlank() throws Exception {
-        Throwable exception =
+    void setUploadURIBlank() {
                 assertThrows(IllegalArgumentException.class, () -> {
 
                     idFactory.setUploadURI(" ");
@@ -48,8 +46,7 @@ public class TimeBasedUploadIdFactoryTest {
     }
 
     @Test
-    public void setUploadURINoStartingSlash() throws Exception {
-        Throwable exception =
+    void setUploadURINoStartingSlash() {
                 assertThrows(IllegalArgumentException.class, () -> {
 
                     idFactory.setUploadURI("test/upload/");
@@ -57,8 +54,7 @@ public class TimeBasedUploadIdFactoryTest {
     }
 
     @Test
-    public void setUploadURIEndsWithDollar() throws Exception {
-        Throwable exception =
+    void setUploadURIEndsWithDollar() {
                 assertThrows(IllegalArgumentException.class, () -> {
 
                     idFactory.setUploadURI("/test/upload$");
@@ -66,7 +62,7 @@ public class TimeBasedUploadIdFactoryTest {
     }
 
     @Test
-    public void readUploadId() throws Exception {
+    void readUploadId() {
         idFactory.setUploadURI("/test/upload");
 
         assertThat(idFactory.readUploadId("/test/upload/1546152320043"),
@@ -74,7 +70,7 @@ public class TimeBasedUploadIdFactoryTest {
     }
 
     @Test
-    public void readUploadIdRegex() throws Exception {
+    void readUploadIdRegex() {
         idFactory.setUploadURI("/users/[0-9]+/files/upload");
 
         assertThat(idFactory.readUploadId("/users/1337/files/upload/1546152320043"),
@@ -82,7 +78,7 @@ public class TimeBasedUploadIdFactoryTest {
     }
 
     @Test
-    public void readUploadIdTrailingSlash() throws Exception {
+    void readUploadIdTrailingSlash() {
         idFactory.setUploadURI("/test/upload/");
 
         assertThat(idFactory.readUploadId("/test/upload/1546152320043"),
@@ -90,7 +86,7 @@ public class TimeBasedUploadIdFactoryTest {
     }
 
     @Test
-    public void readUploadIdRegexTrailingSlash() throws Exception {
+    void readUploadIdRegexTrailingSlash() {
         idFactory.setUploadURI("/users/[0-9]+/files/upload/");
 
         assertThat(idFactory.readUploadId("/users/123456789/files/upload/1546152320043"),
@@ -98,14 +94,14 @@ public class TimeBasedUploadIdFactoryTest {
     }
 
     @Test
-    public void readUploadIdNoUUID() throws Exception {
+    void readUploadIdNoUUID() {
         idFactory.setUploadURI("/test/upload");
 
         assertThat(idFactory.readUploadId("/test/upload/not-a-time-value"), is(nullValue()));
     }
 
     @Test
-    public void readUploadIdRegexNoMatch() throws Exception {
+    void readUploadIdRegexNoMatch() {
         idFactory.setUploadURI("/users/[0-9]+/files/upload");
 
         assertThat(idFactory.readUploadId("/users/files/upload/1546152320043"),
@@ -113,7 +109,7 @@ public class TimeBasedUploadIdFactoryTest {
     }
 
     @Test
-    public void createId() throws Exception {
+    void createId() throws Exception {
         UploadId id = idFactory.createId();
         assertThat(id, not(nullValue()));
         Utils.sleep(10);

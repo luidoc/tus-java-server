@@ -25,77 +25,80 @@ public class FileBasedLockTest {
     }
 
     @Test
-    public void testLockRelease() throws UploadAlreadyLockedException, IOException {
+    void testLockRelease() throws UploadAlreadyLockedException, IOException {
         UUID test = UUID.randomUUID();
         FileBasedLock lock = new FileBasedLock("/test/upload/" + test.toString(), storagePath.resolve(test.toString()));
         lock.release();
+        lock.close();
         assertFalse(Files.exists(storagePath.resolve(test.toString())));
     }
 
     @Test
-    public void testOverlappingLock() throws Exception {
-        Throwable exception =
-                assertThrows(UploadAlreadyLockedException.class, () -> {
+    void testOverlappingLock() {
+        assertThrows(UploadAlreadyLockedException.class, () -> {
 
-                    UUID test = UUID.randomUUID();
-                    Path path = storagePath.resolve(test.toString());
-                    try (FileBasedLock lock1 = new FileBasedLock("/test/upload/" + test.toString(), path)) {
-                        FileBasedLock lock2 = new FileBasedLock("/test/upload/" + test.toString(), path);
-                    }
-                });
+            UUID test = UUID.randomUUID();
+            Path path = storagePath.resolve(test.toString());
+            try (FileBasedLock lock1 = new FileBasedLock("/test/upload/" + test.toString(), path)) {
+                FileBasedLock lock2 = new FileBasedLock("/test/upload/" + test.toString(), path);
+                lock2.close();
+            }
+        });
     }
 
     @Test
-    public void testAlreadyLocked() throws Exception {
-        Throwable exception =
-                assertThrows(UploadAlreadyLockedException.class, () -> {
+    void testAlreadyLocked() {
+        assertThrows(UploadAlreadyLockedException.class, () -> {
 
-                    UUID test1 = UUID.randomUUID();
-                    Path path1 = storagePath.resolve(test1.toString());
-                    try (FileBasedLock lock1 = new FileBasedLock("/test/upload/" + test1.toString(), path1)) {
-                        FileBasedLock lock2 = new FileBasedLock("/test/upload/" + test1.toString(), path1) {
-                            @Override
-                            protected FileChannel createFileChannel() throws IOException {
-                                FileChannel channel = createFileChannelMock();
-                                doReturn(null).when(channel).tryLock(anyLong(), anyLong(), anyBoolean());
-                                return channel;
-                            }
-                        };
+            UUID test1 = UUID.randomUUID();
+            Path path1 = storagePath.resolve(test1.toString());
+            try (FileBasedLock lock1 = new FileBasedLock("/test/upload/" + test1.toString(), path1)) {
+                FileBasedLock lock2 = new FileBasedLock("/test/upload/" + test1.toString(), path1) {
+                    @Override
+                    protected FileChannel createFileChannel() throws IOException {
+                        FileChannel channel = createFileChannelMock();
+                        doReturn(null).when(channel).tryLock(anyLong(), anyLong(), anyBoolean());
+                        return channel;
                     }
-                });
+                };
+                lock2.close();
+            }
+        });
     }
 
     @Test
-    public void testLockReleaseLockRelease() throws UploadAlreadyLockedException, IOException {
+    void testLockReleaseLockRelease() throws UploadAlreadyLockedException, IOException {
         UUID test = UUID.randomUUID();
         Path path = storagePath.resolve(test.toString());
         FileBasedLock lock = new FileBasedLock("/test/upload/" + test.toString(), path);
         lock.release();
+        lock.close();
         assertFalse(Files.exists(path));
         lock = new FileBasedLock("/test/upload/" + test.toString(), path);
         lock.release();
+        lock.close();
         assertFalse(Files.exists(path));
     }
 
     @Test
-    public void testLockIOException() throws UploadAlreadyLockedException, IOException {
-        //Create directory on place where lock file will be
-        Throwable exception =
-                assertThrows(IOException.class, () -> {
+    void testLockIOException() {
+        // Create directory on place where lock file will be
+        assertThrows(IOException.class, () -> {
 
-                    UUID test = UUID.randomUUID();
-                    Path path = storagePath.resolve(test.toString());
-                    try {
-                        Files.createDirectories(path);
-                    } catch (IOException e) {
-                        fail();
-                    }
+            UUID test = UUID.randomUUID();
+            Path path = storagePath.resolve(test.toString());
+            try {
+                Files.createDirectories(path);
+            } catch (IOException e) {
+                fail();
+            }
 
-                    FileBasedLock lock = new FileBasedLock("/test/upload/" + test.toString(), path);
-                });
+            FileBasedLock lock = new FileBasedLock("/test/upload/" + test.toString(), path);
+            lock.close();
+        });
     }
 
-    private FileChannel createFileChannelMock() throws IOException {
+    private FileChannel createFileChannelMock() {
         return spy(FileChannel.class);
     }
 }

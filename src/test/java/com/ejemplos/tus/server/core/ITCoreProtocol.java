@@ -21,7 +21,6 @@ import com.ejemplos.tus.server.exception.UnsupportedMethodException;
 import com.ejemplos.tus.server.exception.UploadNotFoundException;
 import com.ejemplos.tus.server.exception.UploadOffsetMismatchException;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -29,9 +28,8 @@ import org.springframework.mock.web.MockHttpServletResponse;
 
 import com.ejemplos.tus.server.HttpHeader;
 import com.ejemplos.tus.server.HttpMethod;
-import org.springframework.test.context.event.annotation.BeforeTestClass;
 
-public class ITCoreProtocol extends AbstractTusExtensionIntegrationTest {
+class ITCoreProtocol extends AbstractTusExtensionIntegrationTest {
 
     @BeforeEach
     public void setUp() {
@@ -42,23 +40,22 @@ public class ITCoreProtocol extends AbstractTusExtensionIntegrationTest {
     }
 
     @Test
-    public void getName() throws Exception {
+    void getName() {
         assertThat(tusFeature.getName(), is("core"));
     }
 
     @Test
-    public void testUnsupportedHttpMethod() throws Exception {
+    void testUnsupportedHttpMethod() throws Exception {
         prepareUploadInfo(2L, 10L);
         setRequestHeaders(HttpHeader.TUS_RESUMABLE);
-        Throwable exception =
-                assertThrows(UnsupportedMethodException.class, () -> {
+        assertThrows(UnsupportedMethodException.class, () -> {
 
-                    executeCall(HttpMethod.forName("TEST"), false);
-                });
+            executeCall(HttpMethod.forName("TEST"), false);
+        });
     }
 
     @Test
-    public void testHeadWithLength() throws Exception {
+    void testHeadWithLength() throws Exception {
         prepareUploadInfo(2L, 10L);
         setRequestHeaders(HttpHeader.TUS_RESUMABLE);
 
@@ -72,7 +69,7 @@ public class ITCoreProtocol extends AbstractTusExtensionIntegrationTest {
     }
 
     @Test
-    public void testHeadWithoutLength() throws Exception {
+    void testHeadWithoutLength() throws Exception {
         prepareUploadInfo(2L, null);
         setRequestHeaders(HttpHeader.TUS_RESUMABLE);
 
@@ -86,29 +83,27 @@ public class ITCoreProtocol extends AbstractTusExtensionIntegrationTest {
     }
 
     @Test
-    public void testHeadNotFound() throws Exception {
-        //We don't prepare an upload info
+    void testHeadNotFound() {
+        // We don't prepare an upload info
         setRequestHeaders(HttpHeader.TUS_RESUMABLE);
-        Throwable exception =
-                assertThrows(UploadNotFoundException.class, () -> {
-                    executeCall(HttpMethod.HEAD, false);
-                });
+        assertThrows(UploadNotFoundException.class, () -> {
+            executeCall(HttpMethod.HEAD, false);
+        });
     }
 
     @Test
-    public void testHeadInvalidVersion() throws Exception {
+    void testHeadInvalidVersion() {
         setRequestHeaders();
-        Throwable exception =
-                assertThrows(InvalidTusResumableException.class, () -> {
-                    prepareUploadInfo(2L, null);
-                    servletRequest.addHeader(HttpHeader.TUS_RESUMABLE, "2.0.0");
+        assertThrows(InvalidTusResumableException.class, () -> {
+            prepareUploadInfo(2L, null);
+            servletRequest.addHeader(HttpHeader.TUS_RESUMABLE, "2.0.0");
 
-                    executeCall(HttpMethod.HEAD, false);
-                });
+            executeCall(HttpMethod.HEAD, false);
+        });
     }
 
     @Test
-    public void testPatchSuccess() throws Exception {
+    void testPatchSuccess() throws Exception {
         prepareUploadInfo(2L, 10L);
         setRequestHeaders(HttpHeader.TUS_RESUMABLE, HttpHeader.CONTENT_TYPE, HttpHeader.UPLOAD_OFFSET,
                 HttpHeader.CONTENT_LENGTH);
@@ -126,43 +121,40 @@ public class ITCoreProtocol extends AbstractTusExtensionIntegrationTest {
     }
 
     @Test
-    public void testPatchInvalidContentType() throws Exception {
-        Throwable exception =
-                assertThrows(InvalidContentTypeException.class, () -> {
-                    prepareUploadInfo(2L, 10L);
-                    setRequestHeaders(HttpHeader.TUS_RESUMABLE, HttpHeader.UPLOAD_OFFSET, HttpHeader.CONTENT_LENGTH);
+    void testPatchInvalidContentType() {
+        assertThrows(InvalidContentTypeException.class, () -> {
+            prepareUploadInfo(2L, 10L);
+            setRequestHeaders(HttpHeader.TUS_RESUMABLE, HttpHeader.UPLOAD_OFFSET, HttpHeader.CONTENT_LENGTH);
 
-                    executeCall(HttpMethod.PATCH, false);
-                });
+            executeCall(HttpMethod.PATCH, false);
+        });
     }
 
     @Test
-    public void testPatchInvalidUploadOffset() throws Exception {
-        Throwable exception =
-                assertThrows(UploadOffsetMismatchException.class, () -> {
+    void testPatchInvalidUploadOffset() {
+        assertThrows(UploadOffsetMismatchException.class, () -> {
 
-                    prepareUploadInfo(2L, 10L);
-                    setRequestHeaders(HttpHeader.TUS_RESUMABLE, HttpHeader.CONTENT_TYPE, HttpHeader.CONTENT_LENGTH);
-                    servletRequest.addHeader(HttpHeader.UPLOAD_OFFSET, 5);
+            prepareUploadInfo(2L, 10L);
+            setRequestHeaders(HttpHeader.TUS_RESUMABLE, HttpHeader.CONTENT_TYPE, HttpHeader.CONTENT_LENGTH);
+            servletRequest.addHeader(HttpHeader.UPLOAD_OFFSET, 5);
 
-                    executeCall(HttpMethod.PATCH, false);
-                });
+            executeCall(HttpMethod.PATCH, false);
+        });
     }
 
     @Test
-    public void testPatchInvalidContentLength() throws Exception {
-        Throwable exception =
-                assertThrows(InvalidContentLengthException.class, () -> {
-                    prepareUploadInfo(2L, 10L);
-                    setRequestHeaders(HttpHeader.TUS_RESUMABLE, HttpHeader.CONTENT_TYPE, HttpHeader.UPLOAD_OFFSET);
-                    servletRequest.addHeader(HttpHeader.CONTENT_LENGTH, 9);
+    void testPatchInvalidContentLength() {
+        assertThrows(InvalidContentLengthException.class, () -> {
+            prepareUploadInfo(2L, 10L);
+            setRequestHeaders(HttpHeader.TUS_RESUMABLE, HttpHeader.CONTENT_TYPE, HttpHeader.UPLOAD_OFFSET);
+            servletRequest.addHeader(HttpHeader.CONTENT_LENGTH, 9);
 
-                    executeCall(HttpMethod.PATCH, false);
-                });
+            executeCall(HttpMethod.PATCH, false);
+        });
     }
 
     @Test
-    public void testOptionsWithMaxSize() throws Exception {
+    void testOptionsWithMaxSize() throws Exception {
         when(uploadStorageService.getMaxUploadSize()).thenReturn(107374182400L);
 
         setRequestHeaders();
@@ -177,7 +169,7 @@ public class ITCoreProtocol extends AbstractTusExtensionIntegrationTest {
     }
 
     @Test
-    public void testOptionsWithNoMaxSize() throws Exception {
+    void testOptionsWithNoMaxSize() throws Exception {
         when(uploadStorageService.getMaxUploadSize()).thenReturn(0L);
 
         setRequestHeaders();
@@ -191,9 +183,8 @@ public class ITCoreProtocol extends AbstractTusExtensionIntegrationTest {
         assertResponseStatus(HttpServletResponse.SC_NO_CONTENT);
     }
 
-
     @Test
-    public void testOptionsIgnoreTusResumable() throws Exception {
+    void testOptionsIgnoreTusResumable() throws Exception {
         when(uploadStorageService.getMaxUploadSize()).thenReturn(10L);
 
         setRequestHeaders();

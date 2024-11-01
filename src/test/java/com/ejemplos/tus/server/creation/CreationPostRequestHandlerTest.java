@@ -24,7 +24,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -57,7 +56,7 @@ class CreationPostRequestHandlerTest {
     }
 
     @Test
-    void supports() throws Exception {
+    void supports() {
         assertThat(handler.supports(HttpMethod.GET), is(false));
         assertThat(handler.supports(HttpMethod.POST), is(true));
         assertThat(handler.supports(HttpMethod.PUT), is(false));
@@ -102,7 +101,6 @@ class CreationPostRequestHandlerTest {
     void processWithLengthAndNoMetadata() throws Exception {
         servletRequest.setRequestURI("/test/upload");
         servletRequest.addHeader(HttpHeader.UPLOAD_LENGTH, 10L);
-        //servletRequest.addHeader(HttpHeader.UPLOAD_METADATA, null);
 
         final UploadId id = new UploadId(UUID.randomUUID());
         when(uploadStorageService.create(ArgumentMatchers.any(UploadInfo.class), nullable(String.class))).then(
@@ -131,7 +129,6 @@ class CreationPostRequestHandlerTest {
     @Test
     void processWithNoLengthAndMetadata() throws Exception {
         servletRequest.setRequestURI("/test/upload");
-        //servletRequest.addHeader(HttpHeader.UPLOAD_LENGTH, null);
         servletRequest.addHeader(HttpHeader.UPLOAD_METADATA, "encoded-metadata");
 
         final UploadId id = new UploadId(UUID.randomUUID());
@@ -161,8 +158,6 @@ class CreationPostRequestHandlerTest {
     @Test
     void processWithNoLengthAndNoMetadata() throws Exception {
         servletRequest.setRequestURI("/test/upload");
-        //servletRequest.addHeader(HttpHeader.UPLOAD_LENGTH, null);
-        //servletRequest.addHeader(HttpHeader.UPLOAD_METADATA, null);
 
         final UploadId id = new UploadId(UUID.randomUUID());
         when(uploadStorageService.create(ArgumentMatchers.any(UploadInfo.class), nullable(String.class))).then(

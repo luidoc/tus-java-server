@@ -7,10 +7,10 @@ import org.springframework.mock.web.MockHttpServletRequest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class HttpMethodTest {
+class HttpMethodTest {
 
     @Test
-    public void forName() throws Exception {
+    void forName() {
         assertEquals(HttpMethod.DELETE, HttpMethod.forName("delete"));
         assertEquals(HttpMethod.GET, HttpMethod.forName("get"));
         assertEquals(HttpMethod.HEAD, HttpMethod.forName("head"));
@@ -22,7 +22,7 @@ public class HttpMethodTest {
     }
 
     @Test
-    public void getMethodNormal() throws Exception {
+    void getMethodNormal() {
         MockHttpServletRequest servletRequest = new MockHttpServletRequest();
         servletRequest.setMethod("patch");
 
@@ -31,7 +31,7 @@ public class HttpMethodTest {
     }
 
     @Test
-    public void getMethodOverridden() throws Exception {
+    void getMethodOverridden() {
         MockHttpServletRequest servletRequest = new MockHttpServletRequest();
         servletRequest.setMethod("post");
         servletRequest.addHeader(HttpHeader.METHOD_OVERRIDE, "patch");
@@ -41,7 +41,7 @@ public class HttpMethodTest {
     }
 
     @Test
-    public void getMethodOverriddenDoesNotExist() throws Exception {
+    void getMethodOverriddenDoesNotExist() {
         MockHttpServletRequest servletRequest = new MockHttpServletRequest();
         servletRequest.setMethod("post");
         servletRequest.addHeader(HttpHeader.METHOD_OVERRIDE, "test");
@@ -51,15 +51,14 @@ public class HttpMethodTest {
     }
 
     @Test
-    public void getMethodNull() {
-        Throwable exception =
-                assertThrows(NullPointerException.class, () -> {
-                    HttpMethod.getMethodIfSupported(null, EnumSet.allOf(HttpMethod.class));
-                });
+    void getMethodNull() {
+        assertThrows(NullPointerException.class, () -> {
+            HttpMethod.getMethodIfSupported(null, EnumSet.allOf(HttpMethod.class));
+        });
     }
 
     @Test
-    public void getMethodNotSupported() throws Exception {
+    void getMethodNotSupported() {
         MockHttpServletRequest servletRequest = new MockHttpServletRequest();
         servletRequest.setMethod("put");
 
@@ -67,7 +66,7 @@ public class HttpMethodTest {
     }
 
     @Test
-    public void getMethodRequestNotExists() throws Exception {
+    void getMethodRequestNotExists() {
         MockHttpServletRequest servletRequest = new MockHttpServletRequest();
         servletRequest.setMethod("test");
 

@@ -20,7 +20,6 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import com.ejemplos.tus.server.HttpHeader;
 import com.ejemplos.tus.server.HttpMethod;
 
-
 @ExtendWith(MockitoExtension.class)
 class ChecksumAlgorithmValidatorTest {
 
@@ -38,7 +37,7 @@ class ChecksumAlgorithmValidatorTest {
     }
 
     @Test
-    void supports() throws Exception {
+    void supports() {
         assertThat(validator.supports(HttpMethod.GET), is(false));
         assertThat(validator.supports(HttpMethod.POST), is(false));
         assertThat(validator.supports(HttpMethod.PUT), is(false));
@@ -60,8 +59,6 @@ class ChecksumAlgorithmValidatorTest {
 
     @Test
     void testNoHeader() throws Exception {
-        //servletRequest.addHeader(HttpHeader.UPLOAD_CHECKSUM, null);
-
         try {
             validator.validate(HttpMethod.PATCH, servletRequest, uploadStorageService, null);
         } catch (Exception ex) {
@@ -70,13 +67,12 @@ class ChecksumAlgorithmValidatorTest {
     }
 
     @Test
-    void testInvalidHeader() throws Exception {
-        Throwable exception =
-                assertThrows(ChecksumAlgorithmNotSupportedException.class, () -> {
-                    servletRequest.addHeader(HttpHeader.UPLOAD_CHECKSUM, "test 1234567890");
+    void testInvalidHeader() {
+        assertThrows(ChecksumAlgorithmNotSupportedException.class, () -> {
+            servletRequest.addHeader(HttpHeader.UPLOAD_CHECKSUM, "test 1234567890");
 
-                    validator.validate(HttpMethod.PATCH, servletRequest, uploadStorageService, null);
-                });
+            validator.validate(HttpMethod.PATCH, servletRequest, uploadStorageService, null);
+        });
     }
 
 }

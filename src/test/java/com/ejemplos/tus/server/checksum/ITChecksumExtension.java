@@ -14,10 +14,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.*;
 
-public class ITChecksumExtension extends AbstractTusExtensionIntegrationTest {
+class ITChecksumExtension extends AbstractTusExtensionIntegrationTest {
 
     @BeforeEach
-    public void setUp() throws Exception {
+    public void setUp() {
         servletRequest = spy(new MockHttpServletRequest());
         servletResponse = new MockHttpServletResponse();
         tusFeature = new ChecksumExtension();
@@ -25,7 +25,7 @@ public class ITChecksumExtension extends AbstractTusExtensionIntegrationTest {
     }
 
     @Test
-    public void testOptions() throws Exception {
+    void testOptions() throws Exception {
         setRequestHeaders();
 
         executeCall(HttpMethod.OPTIONS, false);
@@ -35,18 +35,17 @@ public class ITChecksumExtension extends AbstractTusExtensionIntegrationTest {
     }
 
     @Test
-    public void testInvalidAlgorithm() {
-        Throwable exception =
-                assertThrows(ChecksumAlgorithmNotSupportedException.class, () -> {
-                    servletRequest.addHeader(HttpHeader.UPLOAD_CHECKSUM, "test 1234567890");
-                    servletRequest.setContent("Test content".getBytes());
+    void testInvalidAlgorithm() {
+        assertThrows(ChecksumAlgorithmNotSupportedException.class, () -> {
+            servletRequest.addHeader(HttpHeader.UPLOAD_CHECKSUM, "test 1234567890");
+            servletRequest.setContent("Test content".getBytes());
 
-                    executeCall(HttpMethod.PATCH, false);
-                });
+            executeCall(HttpMethod.PATCH, false);
+        });
     }
 
     @Test
-    public void testValidChecksumTrailerHeader() throws Exception {
+    void testValidChecksumTrailerHeader() throws Exception {
         String content = "8\r\n" +
                 "Mozilla \r\n" +
                 "A\r\n" +
@@ -68,7 +67,7 @@ public class ITChecksumExtension extends AbstractTusExtensionIntegrationTest {
     }
 
     @Test
-    public void testValidChecksumNormalHeader() throws Exception {
+    void testValidChecksumNormalHeader() throws Exception {
         String content = "Mozilla Developer Network";
 
         servletRequest.addHeader(HttpHeader.UPLOAD_CHECKSUM, "sha1 zYR9iS5Rya+WoH1fEyfKqqdPWWE=");
@@ -80,7 +79,7 @@ public class ITChecksumExtension extends AbstractTusExtensionIntegrationTest {
     }
 
     @Test
-    public void testInvalidChecksumTrailerHeader() throws Exception {
+    void testInvalidChecksumTrailerHeader() {
         String content = "8\r\n" +
                 "Mozilla \r\n" +
                 "A\r\n" +
@@ -90,29 +89,27 @@ public class ITChecksumExtension extends AbstractTusExtensionIntegrationTest {
                 "0\r\n" +
                 "Upload-Checksum: sha1 zYR9iS5Rya+WoH1fEyfKqqdPWW=\r\n" +
                 "\r\n";
-        Throwable exception =
-                assertThrows(UploadChecksumMismatchException.class, () -> {
-                    servletRequest.addHeader(HttpHeader.TRANSFER_ENCODING, "chunked");
-                    servletRequest.setContent(content.getBytes());
+        assertThrows(UploadChecksumMismatchException.class, () -> {
+            servletRequest.addHeader(HttpHeader.TRANSFER_ENCODING, "chunked");
+            servletRequest.setContent(content.getBytes());
 
-                    executeCall(HttpMethod.PATCH, true);
-                });
+            executeCall(HttpMethod.PATCH, true);
+        });
     }
 
     @Test
-    public void testInvalidChecksumNormalHeader() throws Exception {
+    void testInvalidChecksumNormalHeader() {
         String content = "Mozilla Developer Network";
-        Throwable exception =
-                assertThrows(UploadChecksumMismatchException.class, () -> {
-                    servletRequest.addHeader(HttpHeader.UPLOAD_CHECKSUM, "sha1 zYR9iS5Rya+WoH1fEyfKqqdPWW=");
-                    servletRequest.setContent(content.getBytes());
+        assertThrows(UploadChecksumMismatchException.class, () -> {
+            servletRequest.addHeader(HttpHeader.UPLOAD_CHECKSUM, "sha1 zYR9iS5Rya+WoH1fEyfKqqdPWW=");
+            servletRequest.setContent(content.getBytes());
 
-                    executeCall(HttpMethod.PATCH, true);
-                });
+            executeCall(HttpMethod.PATCH, true);
+        });
     }
 
     @Test
-    public void testNoChecksum() throws Exception {
+    void testNoChecksum() throws Exception {
         String content = "Mozilla Developer Network";
 
         servletRequest.setContent(content.getBytes());

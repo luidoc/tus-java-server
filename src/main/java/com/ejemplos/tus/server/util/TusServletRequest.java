@@ -18,7 +18,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletRequestWrapper;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.io.input.CountingInputStream;
+import org.apache.commons.io.input.BoundedInputStream;
 import org.apache.commons.lang3.StringUtils;
 
 import com.ejemplos.tus.server.HttpHeader;
@@ -26,14 +26,14 @@ import com.ejemplos.tus.server.TusExtension;
 
 public class TusServletRequest extends HttpServletRequestWrapper {
 
-    private CountingInputStream countingInputStream;
-    private final Map<ChecksumAlgorithm, DigestInputStream> digestInputStreamMap = new EnumMap<ChecksumAlgorithm, DigestInputStream>(ChecksumAlgorithm.class);
+    private BoundedInputStream boundedInputStream;
+    private final Map<ChecksumAlgorithm, DigestInputStream> digestInputStreamMap = new EnumMap<>(ChecksumAlgorithm.class);
 
     private InputStream contentInputStream = null;
     private boolean isChunkedTransferDecodingEnabled = true;
 
-    private final Map<String, List<String>> trailerHeaders = new TreeMap<String, List<String>>(String.CASE_INSENSITIVE_ORDER);
-    private final Set<String> processedBySet = new TreeSet<String>();
+    private final Map<String, List<String>> trailerHeaders = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    private final Set<String> processedBySet = new TreeSet<>();
 
     /**
      * Constructs a request object wrapping the given request.
@@ -68,8 +68,10 @@ public class TusServletRequest extends HttpServletRequestWrapper {
                 contentInputStream = new HttpChunkedEncodingInputStream(contentInputStream, trailerHeaders);
             }
 
-            countingInputStream = new CountingInputStream(contentInputStream);
-            contentInputStream = countingInputStream;
+            boundedInputStream = BoundedInputStream.builder()
+                    .setInputStream(contentInputStream)
+                    .get();
+            contentInputStream = boundedInputStream;
 
             ChecksumAlgorithm checksumAlgorithm = ChecksumAlgorithm.forUploadChecksumHeader(
                     getHeader(HttpHeader.UPLOAD_CHECKSUM));
@@ -97,7 +99,7 @@ public class TusServletRequest extends HttpServletRequestWrapper {
     }
 
     public long getBytesRead() {
-        return countingInputStream == null ? 0 : countingInputStream.getByteCount();
+        return boundedInputStream == null ? 0 : boundedInputStream.getCount();
     }
 
     public boolean hasCalculatedChecksum() {

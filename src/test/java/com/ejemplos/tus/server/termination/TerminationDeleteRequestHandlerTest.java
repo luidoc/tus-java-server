@@ -22,7 +22,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -30,7 +29,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import com.ejemplos.tus.server.HttpMethod;
 
 @ExtendWith(MockitoExtension.class)
-public class TerminationDeleteRequestHandlerTest {
+class TerminationDeleteRequestHandlerTest {
 
     private TerminationDeleteRequestHandler handler;
 
@@ -49,7 +48,7 @@ public class TerminationDeleteRequestHandlerTest {
     }
 
     @Test
-    public void supports() throws Exception {
+    void supports() {
         assertThat(handler.supports(HttpMethod.GET), is(false));
         assertThat(handler.supports(HttpMethod.POST), is(false));
         assertThat(handler.supports(HttpMethod.PUT), is(false));
@@ -61,7 +60,7 @@ public class TerminationDeleteRequestHandlerTest {
     }
 
     @Test
-    public void testWithNotExistingUpload() throws Exception {
+    void testWithNotExistingUpload() throws Exception {
         when(uploadStorageService.getUploadInfo(nullable(String.class), nullable(String.class))).thenReturn(null);
 
         handler.process(HttpMethod.DELETE, new TusServletRequest(servletRequest),
@@ -72,7 +71,7 @@ public class TerminationDeleteRequestHandlerTest {
     }
 
     @Test
-    public void testWithExistingUpload() throws Exception {
+    void testWithExistingUpload() throws Exception {
         final UploadId id = new UploadId(UUID.randomUUID());
 
         UploadInfo info = new UploadInfo();

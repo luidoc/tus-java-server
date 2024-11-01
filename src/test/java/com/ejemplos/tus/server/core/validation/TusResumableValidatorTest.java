@@ -5,7 +5,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import com.ejemplos.tus.server.exception.InvalidContentTypeException;
 import com.ejemplos.tus.server.exception.InvalidTusResumableException;
 import com.ejemplos.tus.server.upload.UploadStorageService;
 
@@ -16,7 +15,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import com.ejemplos.tus.server.HttpHeader;
 import com.ejemplos.tus.server.HttpMethod;
 
-public class TusResumableValidatorTest {
+class TusResumableValidatorTest {
 
     private MockHttpServletRequest servletRequest;
     private TusResumableValidator validator;
@@ -29,25 +28,23 @@ public class TusResumableValidatorTest {
     }
 
     @Test
-    public void validateNoVersion() throws Exception {
-        Throwable exception =
-                assertThrows(InvalidTusResumableException.class, () -> {
+    void validateNoVersion() {
+        assertThrows(InvalidTusResumableException.class, () -> {
 
-                    validator.validate(HttpMethod.POST, servletRequest, uploadStorageService, null);
-                });
+            validator.validate(HttpMethod.POST, servletRequest, uploadStorageService, null);
+        });
     }
 
     @Test
-    public void validateInvalidVersion() throws Exception {
+    void validateInvalidVersion() {
         servletRequest.addHeader(HttpHeader.TUS_RESUMABLE, "2.0.0");
-        Throwable exception =
-                assertThrows(InvalidTusResumableException.class, () -> {
-                    validator.validate(HttpMethod.POST, servletRequest, uploadStorageService, null);
-                });
+        assertThrows(InvalidTusResumableException.class, () -> {
+            validator.validate(HttpMethod.POST, servletRequest, uploadStorageService, null);
+        });
     }
 
     @Test
-    public void validateValid() throws Exception {
+    void validateValid() throws Exception {
         servletRequest.addHeader(HttpHeader.TUS_RESUMABLE, "1.0.0");
         try {
             validator.validate(HttpMethod.POST, servletRequest, uploadStorageService, null);
@@ -57,7 +54,7 @@ public class TusResumableValidatorTest {
     }
 
     @Test
-    public void validateNullMethod() throws Exception {
+    void validateNullMethod() throws Exception {
         servletRequest.addHeader(HttpHeader.TUS_RESUMABLE, "1.0.0");
         try {
             validator.validate(null, servletRequest, uploadStorageService, null);
@@ -67,7 +64,7 @@ public class TusResumableValidatorTest {
     }
 
     @Test
-    public void supports() throws Exception {
+    void supports() {
         assertThat(validator.supports(HttpMethod.GET), is(false));
         assertThat(validator.supports(HttpMethod.POST), is(true));
         assertThat(validator.supports(HttpMethod.PUT), is(true));

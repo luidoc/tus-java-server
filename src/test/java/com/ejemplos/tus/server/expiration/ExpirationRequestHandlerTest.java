@@ -24,7 +24,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -33,7 +32,7 @@ import com.ejemplos.tus.server.HttpHeader;
 import com.ejemplos.tus.server.HttpMethod;
 
 @ExtendWith(MockitoExtension.class)
-public class ExpirationRequestHandlerTest {
+class ExpirationRequestHandlerTest {
 
     private static final FastDateFormat DATE_FORMAT = FastDateFormat.getInstance("yyyy-MM-dd HH:mm:ss",
             TimeZone.getTimeZone(TimeZones.GMT_ID), Locale.US);
@@ -55,7 +54,7 @@ public class ExpirationRequestHandlerTest {
     }
 
     @Test
-    public void supports() throws Exception {
+    void supports() {
         assertThat(handler.supports(HttpMethod.GET), is(false));
         assertThat(handler.supports(HttpMethod.POST), is(true));
         assertThat(handler.supports(HttpMethod.PUT), is(false));
@@ -67,7 +66,7 @@ public class ExpirationRequestHandlerTest {
     }
 
     @Test
-    public void testCreatedUpload() throws Exception {
+    void testCreatedUpload() throws Exception {
         UploadInfo info = createUploadInfo();
         when(uploadStorageService.getUploadInfo(nullable(String.class), nullable(String.class))).thenReturn(info);
         when(uploadStorageService.getUploadExpirationPeriod()).thenReturn(172800000L);
@@ -82,7 +81,7 @@ public class ExpirationRequestHandlerTest {
     }
 
     @Test
-    public void testInProgressUpload() throws Exception {
+    void testInProgressUpload() throws Exception {
         UploadInfo info = createUploadInfo();
         info.setOffset(2L);
         info.setLength(10L);
@@ -98,7 +97,7 @@ public class ExpirationRequestHandlerTest {
     }
 
     @Test
-    public void testNoUpload() throws Exception {
+    void testNoUpload() throws Exception {
         when(uploadStorageService.getUploadInfo(nullable(String.class), nullable(String.class))).thenReturn(null);
         when(uploadStorageService.getUploadExpirationPeriod()).thenReturn(172800000L);
 
@@ -111,7 +110,7 @@ public class ExpirationRequestHandlerTest {
     }
 
     @Test
-    public void testFinishedUpload() throws Exception {
+    void testFinishedUpload() throws Exception {
         UploadInfo info = createUploadInfo();
         info.setOffset(10L);
         info.setLength(10L);
@@ -122,13 +121,13 @@ public class ExpirationRequestHandlerTest {
         handler.process(HttpMethod.PATCH, new TusServletRequest(servletRequest),
                 tusResponse, uploadStorageService, null);
 
-        //Upload Expires header must always be set
+        // Upload Expires header must always be set
         verify(uploadStorageService, times(1)).update(info);
         assertThat(tusResponse.getHeader(HttpHeader.UPLOAD_EXPIRES), is("1516617791000"));
     }
 
     @Test
-    public void testNullExpiration() throws Exception {
+    void testNullExpiration() throws Exception {
         UploadInfo info = createUploadInfo();
         info.setOffset(8L);
         info.setLength(10L);
@@ -144,7 +143,7 @@ public class ExpirationRequestHandlerTest {
     }
 
     @Test
-    public void testZeroExpiration() throws Exception {
+    void testZeroExpiration() throws Exception {
         UploadInfo info = createUploadInfo();
         info.setOffset(8L);
         info.setLength(10L);
@@ -160,7 +159,7 @@ public class ExpirationRequestHandlerTest {
     }
 
     @Test
-    public void testNegativeExpiration() throws Exception {
+    void testNegativeExpiration() throws Exception {
         UploadInfo info = createUploadInfo();
         info.setOffset(8L);
         info.setLength(10L);

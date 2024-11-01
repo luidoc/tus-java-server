@@ -82,7 +82,7 @@ public class DiskStorageServiceTest {
     }
 
     @Test
-    public void getMaxUploadSize() throws Exception {
+    void getMaxUploadSize() {
         storageService.setMaxUploadSize(null);
         assertThat(storageService.getMaxUploadSize(), is(0L));
 
@@ -97,12 +97,12 @@ public class DiskStorageServiceTest {
     }
 
     @Test
-    public void getUploadURI() throws Exception {
+    void getUploadURI() {
         assertThat(storageService.getUploadURI(), is(UPLOAD_URL));
     }
 
     @Test
-    public void create() throws Exception {
+    void create() throws Exception {
         UploadInfo info = new UploadInfo();
         info.setLength(10L);
         info.setEncodedMetadata("Encoded Metadata");
@@ -118,7 +118,7 @@ public class DiskStorageServiceTest {
     }
 
     @Test
-    public void getUploadInfoById() throws Exception {
+    void getUploadInfoById() throws Exception {
         UploadInfo info = new UploadInfo();
         info.setLength(10L);
         info.setEncodedMetadata("Encoded Metadata");
@@ -129,7 +129,7 @@ public class DiskStorageServiceTest {
 
         UploadInfo readInfo = storageService.getUploadInfo(info.getId());
 
-        assertTrue(readInfo != info);
+        assertNotSame(readInfo, info);
         assertThat(readInfo.getId(), is(info.getId()));
         assertThat(readInfo.getOffset(), is(0L));
         assertThat(readInfo.getLength(), is(10L));
@@ -140,13 +140,13 @@ public class DiskStorageServiceTest {
     }
 
     @Test
-    public void getUploadInfoByFakeId() throws Exception {
+    void getUploadInfoByFakeId() throws Exception {
         UploadInfo readInfo = storageService.getUploadInfo(new UploadId(UUID.randomUUID()));
         assertThat(readInfo, is(nullValue()));
     }
 
     @Test
-    public void getUploadInfoByUrl() throws Exception {
+    void getUploadInfoByUrl() throws Exception {
         UploadInfo info = new UploadInfo();
         info.setLength(10L);
         info.setEncodedMetadata("Encoded Metadata");
@@ -157,7 +157,7 @@ public class DiskStorageServiceTest {
 
         UploadInfo readInfo = storageService.getUploadInfo(UPLOAD_URL + "/" + info.getId(), null);
 
-        assertTrue(readInfo != info);
+        assertNotSame(readInfo, info);
         assertThat(readInfo.getId(), is(info.getId()));
         assertThat(readInfo.getOffset(), is(0L));
         assertThat(readInfo.getLength(), is(10L));
@@ -165,7 +165,7 @@ public class DiskStorageServiceTest {
     }
 
     @Test
-    public void getUploadInfoOtherOwner() throws Exception {
+    void getUploadInfoOtherOwner() throws Exception {
         UploadInfo info = new UploadInfo();
         info.setLength(10L);
         info.setEncodedMetadata("Encoded Metadata");
@@ -176,7 +176,7 @@ public class DiskStorageServiceTest {
 
         UploadInfo readInfo = storageService.getUploadInfo(UPLOAD_URL + "/" + info.getId(), "foo");
 
-        assertTrue(readInfo != info);
+        assertNotSame(readInfo, info);
         assertThat(readInfo.getId(), is(info.getId()));
         assertThat(readInfo.getOffset(), is(0L));
         assertThat(readInfo.getLength(), is(10L));
@@ -186,7 +186,7 @@ public class DiskStorageServiceTest {
     }
 
     @Test
-    public void update() throws Exception {
+    void update() throws Exception {
         UploadInfo info1 = new UploadInfo();
         info1.setLength(10L);
         info1.setEncodedMetadata("Encoded Metadata");
@@ -205,8 +205,8 @@ public class DiskStorageServiceTest {
 
         UploadInfo readInfo = storageService.getUploadInfo(info1.getId());
 
-        assertTrue(readInfo != info1);
-        assertTrue(readInfo != info2);
+        assertNotSame(readInfo, info1);
+        assertNotSame(readInfo, info2);
         assertThat(info2.getId(), is(info1.getId()));
         assertThat(readInfo.getId(), is(info1.getId()));
         assertThat(readInfo.getOffset(), is(8L));
@@ -215,7 +215,7 @@ public class DiskStorageServiceTest {
     }
 
     @Test
-    public void append() throws Exception {
+    void append() throws Exception {
         String part1 = "This is part 1";
         String part2 = "This is the second part of my upload";
 
@@ -251,7 +251,7 @@ public class DiskStorageServiceTest {
     }
 
     @Test
-    public void appendExceedingMaxSingleUpload() throws Exception {
+    void appendExceedingMaxSingleUpload() throws Exception {
         String content = "This is an upload that is too large";
 
         storageService.setMaxUploadSize(17L);
@@ -271,7 +271,7 @@ public class DiskStorageServiceTest {
     }
 
     @Test
-    public void appendExceedingMaxMultiUpload() throws Exception {
+    void appendExceedingMaxMultiUpload() throws Exception {
         String part1 = "This is an ";
         String part2 = "upload that is too large";
 
@@ -294,9 +294,8 @@ public class DiskStorageServiceTest {
     }
 
     @Test
-    public void appendOnFakeUpload() throws Exception {
+    void appendOnFakeUpload() {
         String content = "This upload was not created before";
-        Throwable exception =
                 assertThrows(UploadNotFoundException.class, () -> {
 
                     //Create our fake upload
@@ -310,9 +309,8 @@ public class DiskStorageServiceTest {
     }
 
     @Test
-    public void appendOnInvalidOffset() throws Exception {
+    void appendOnInvalidOffset() {
         String content = "This is an upload that is too large";
-        Throwable exception =
                 assertThrows(InvalidUploadOffsetException.class, () -> {
 
                     storageService.setMaxUploadSize(17L);
@@ -333,7 +331,7 @@ public class DiskStorageServiceTest {
     }
 
     @Test
-    public void appendInterrupted() throws Exception {
+    void appendInterrupted() throws Exception {
         String content = "This is an upload that will be interrupted";
 
         //Create our upload with the correct length
@@ -365,7 +363,7 @@ public class DiskStorageServiceTest {
     }
 
     @Test
-    public void testRemoveLastNumberOfBytes() throws Exception {
+    void testRemoveLastNumberOfBytes() throws Exception {
         String content = "This is an upload that will be truncated";
 
         //Create our upload with the correct length
@@ -385,7 +383,7 @@ public class DiskStorageServiceTest {
     }
 
     @Test
-    public void getUploadedBytes() throws Exception {
+    void getUploadedBytes() throws Exception {
         String content = "This is the content of my upload";
 
         //Create our upload with the correct length
@@ -407,7 +405,7 @@ public class DiskStorageServiceTest {
     }
 
     @Test
-    public void copyUploadedBytes() throws Exception {
+    void copyUploadedBytes() throws Exception {
         String content = "This is the content of my upload";
 
         //Create our upload with the correct length
@@ -429,7 +427,7 @@ public class DiskStorageServiceTest {
     }
 
     @Test
-    public void terminateCompletedUpload() throws Exception {
+    void terminateCompletedUpload() throws Exception {
         String content = "This is the content of my upload";
 
         //Create our upload with the correct length
@@ -451,7 +449,7 @@ public class DiskStorageServiceTest {
     }
 
     @Test
-    public void terminateInProgressUpload() throws Exception {
+    void terminateInProgressUpload() throws Exception {
         String content = "This is the content of my upload";
 
         //Create our upload with the correct length
@@ -476,7 +474,7 @@ public class DiskStorageServiceTest {
     }
 
     @Test
-    public void cleanupExpiredUploads() throws Exception {
+    void cleanupExpiredUploads() throws Exception {
         when(uploadLockingService.isLocked(any(UploadId.class))).thenReturn(false);
 
         String content = "This is the content of my upload";

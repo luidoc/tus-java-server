@@ -14,7 +14,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -42,7 +41,7 @@ class CreationHeadRequestHandlerTest {
     }
 
     @Test
-    void supports() throws Exception {
+    void supports() {
         assertThat(handler.supports(HttpMethod.GET), is(false));
         assertThat(handler.supports(HttpMethod.POST), is(false));
         assertThat(handler.supports(HttpMethod.PUT), is(false));

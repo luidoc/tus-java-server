@@ -8,6 +8,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
@@ -21,7 +23,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class UploadLengthValidatorTest {
+class UploadLengthValidatorTest {
 
     private UploadLengthValidator validator;
 
@@ -37,7 +39,7 @@ public class UploadLengthValidatorTest {
     }
 
     @Test
-    public void supports() throws Exception {
+    void supports() {
         assertThat(validator.supports(HttpMethod.GET), is(false));
         assertThat(validator.supports(HttpMethod.POST), is(true));
         assertThat(validator.supports(HttpMethod.PUT), is(false));
@@ -48,10 +50,15 @@ public class UploadLengthValidatorTest {
         assertThat(validator.supports(null), is(false));
     }
 
-    @Test
-    public void validateNoMaxUploadLength() throws Exception {
-        when(uploadStorageService.getMaxUploadSize()).thenReturn(0L);
-        servletRequest.addHeader(HttpHeader.UPLOAD_LENGTH, 300L);
+    @ParameterizedTest
+    @CsvSource({
+        "0, 300",
+        "400, 300",
+        "300, 300"
+    })
+    void validateUploadLength(long maxUploadSize, long uploadLength) throws Exception {
+        when(uploadStorageService.getMaxUploadSize()).thenReturn(maxUploadSize);
+        servletRequest.addHeader(HttpHeader.UPLOAD_LENGTH, uploadLength);
 
         try {
             validator.validate(HttpMethod.POST, servletRequest, uploadStorageService, null);
@@ -59,27 +66,12 @@ public class UploadLengthValidatorTest {
             fail();
         }
 
-        //No Exception is thrown
+        // No Exception is thrown
     }
 
     @Test
-    public void validateBelowMaxUploadLength() throws Exception {
-        when(uploadStorageService.getMaxUploadSize()).thenReturn(400L);
-        servletRequest.addHeader(HttpHeader.UPLOAD_LENGTH, 300L);
-
-        try {
-            validator.validate(HttpMethod.POST, servletRequest, uploadStorageService, null);
-        } catch (Exception ex) {
-            fail();
-        }
-
-        //No Exception is thrown
-    }
-
-    @Test
-    public void validateEqualMaxUploadLength() throws Exception {
+    void validateNoUploadLength() throws Exception {
         when(uploadStorageService.getMaxUploadSize()).thenReturn(300L);
-        servletRequest.addHeader(HttpHeader.UPLOAD_LENGTH, 300L);
 
         try {
             validator.validate(HttpMethod.POST, servletRequest, uploadStorageService, null);
@@ -87,33 +79,18 @@ public class UploadLengthValidatorTest {
             fail();
         }
 
-        //No Exception is thrown
+        // No Exception is thrown
     }
 
     @Test
-    public void validateNoUploadLength() throws Exception {
-        when(uploadStorageService.getMaxUploadSize()).thenReturn(300L);
-        //servletRequest.addHeader(HttpHeader.UPLOAD_LENGTH, 300L);
+    void validateAboveMaxUploadLength() {
+        assertThrows(MaxUploadLengthExceededException.class, () -> {
 
-        try {
+            when(uploadStorageService.getMaxUploadSize()).thenReturn(200L);
+            servletRequest.addHeader(HttpHeader.UPLOAD_LENGTH, 300L);
+
             validator.validate(HttpMethod.POST, servletRequest, uploadStorageService, null);
-        } catch (Exception ex) {
-            fail();
-        }
-
-        //No Exception is thrown
-    }
-
-    @Test
-    public void validateAboveMaxUploadLength() throws Exception {
-        Throwable exception =
-                assertThrows(MaxUploadLengthExceededException.class, () -> {
-
-                            when(uploadStorageService.getMaxUploadSize()).thenReturn(200L);
-                            servletRequest.addHeader(HttpHeader.UPLOAD_LENGTH, 300L);
-
-                            validator.validate(HttpMethod.POST, servletRequest, uploadStorageService, null);
-                        });
-        //Expect a MaxUploadLengthExceededException
+        });
+        // Expect a MaxUploadLengthExceededException
     }
 }

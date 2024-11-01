@@ -13,7 +13,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import com.ejemplos.tus.server.HttpHeader;
 import com.ejemplos.tus.server.HttpMethod;
 
-public class NoUploadLengthOnFinalValidatorTest {
+class NoUploadLengthOnFinalValidatorTest {
 
     private NoUploadLengthOnFinalValidator validator;
 
@@ -26,7 +26,7 @@ public class NoUploadLengthOnFinalValidatorTest {
     }
 
     @Test
-    public void supports() throws Exception {
+    void supports() {
         assertThat(validator.supports(HttpMethod.GET), is(false));
         assertThat(validator.supports(HttpMethod.POST), is(true));
         assertThat(validator.supports(HttpMethod.PUT), is(false));
@@ -38,60 +38,56 @@ public class NoUploadLengthOnFinalValidatorTest {
     }
 
     @Test
-    public void validateFinalUploadValid() throws Exception {
+    void validateFinalUploadValid() throws Exception {
         servletRequest.addHeader(HttpHeader.UPLOAD_CONCAT, "final;12345 235235 253523");
-        //servletRequest.addHeader(HttpHeader.UPLOAD_LENGTH, "10L");
 
-        //When we validate the request
+        // When we validate the request
         try {
             validator.validate(HttpMethod.POST, servletRequest, null, null);
         } catch (Exception ex) {
             fail();
         }
 
-        //No Exception is thrown
+        // No Exception is thrown
     }
 
     @Test
-    public void validateFinalUploadInvalid() throws Exception {
-        Throwable exception =
-                assertThrows(UploadLengthNotAllowedOnConcatenationException.class, () -> {
-                    servletRequest.addHeader(HttpHeader.UPLOAD_CONCAT, "final;12345 235235 253523");
-                    servletRequest.addHeader(HttpHeader.UPLOAD_LENGTH, "10L");
+    void validateFinalUploadInvalid() {
+        assertThrows(UploadLengthNotAllowedOnConcatenationException.class, () -> {
+            servletRequest.addHeader(HttpHeader.UPLOAD_CONCAT, "final;12345 235235 253523");
+            servletRequest.addHeader(HttpHeader.UPLOAD_LENGTH, "10L");
 
-                    //When we validate the request
-                    validator.validate(HttpMethod.POST, servletRequest, null, null);
-                });
+            // When we validate the request
+            validator.validate(HttpMethod.POST, servletRequest, null, null);
+        });
     }
 
     @Test
-    public void validateNotFinal1() throws Exception {
+    void validateNotFinal1() throws Exception {
         servletRequest.addHeader(HttpHeader.UPLOAD_CONCAT, "partial");
         servletRequest.addHeader(HttpHeader.UPLOAD_LENGTH, "10L");
 
-        //When we validate the request
+        // When we validate the request
         try {
             validator.validate(HttpMethod.POST, servletRequest, null, null);
         } catch (Exception ex) {
             fail();
         }
 
-        //No Exception is thrown
+        // No Exception is thrown
     }
 
     @Test
-    public void validateNotFinal2() throws Exception {
-        //servletRequest.addHeader(HttpHeader.UPLOAD_CONCAT, "partial");
-        //servletRequest.addHeader(HttpHeader.UPLOAD_LENGTH, "10L");
+    void validateNotFinal2() throws Exception {
 
-        //When we validate the request
+        // When we validate the request
         try {
             validator.validate(HttpMethod.POST, servletRequest, null, null);
         } catch (Exception ex) {
             fail();
         }
 
-        //No Exception is thrown
+        // No Exception is thrown
     }
 
 }

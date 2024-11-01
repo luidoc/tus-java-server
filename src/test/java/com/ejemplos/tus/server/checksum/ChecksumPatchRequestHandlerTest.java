@@ -50,7 +50,7 @@ class ChecksumPatchRequestHandlerTest {
     }
 
     @Test
-    void supports() throws Exception {
+    void supports() {
         assertThat(handler.supports(HttpMethod.GET), is(false));
         assertThat(handler.supports(HttpMethod.POST), is(false));
         assertThat(handler.supports(HttpMethod.PUT), is(false));
@@ -75,7 +75,7 @@ class ChecksumPatchRequestHandlerTest {
 
     @Test
     void testValidHeaderAndInvalidChecksum(){
-        Throwable exception = assertThrows(UploadChecksumMismatchException.class, () -> {
+        assertThrows(UploadChecksumMismatchException.class, () -> {
             when(servletRequest.getHeader(HttpHeader.UPLOAD_CHECKSUM)).thenReturn("sha1 1234567890");
             when(servletRequest.getCalculatedChecksum(ArgumentMatchers.any(ChecksumAlgorithm.class)))
                     .thenReturn("0123456789");
@@ -96,7 +96,7 @@ class ChecksumPatchRequestHandlerTest {
 
     @Test
     void testInvalidHeader() {
-        Throwable exception = assertThrows(ChecksumAlgorithmNotSupportedException.class, () -> {
+        assertThrows(ChecksumAlgorithmNotSupportedException.class, () -> {
             when(servletRequest.getHeader(HttpHeader.UPLOAD_CHECKSUM)).thenReturn("test 1234567890");
             when(servletRequest.hasCalculatedChecksum()).thenReturn(true);
 
